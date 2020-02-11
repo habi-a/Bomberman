@@ -13,7 +13,8 @@ int main()
 {
     game_t *game = game_init(640, 480);
 
-    game_cwindow(game);
+    game->player1 = load_player(game, 0, 0, "mario.png");
+    game_create_window(game);
     game_destroy(game);
     return (EXIT_SUCCESS);
 }

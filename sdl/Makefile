@@ -7,12 +7,13 @@
 
 CC		= 	gcc
 CFLAGS	+= 	-Wall -Wextra -Werror -Wpedantic
-LDFLAGS	=	-lSDL2 -lSDL2main
+LDFLAGS	=	-lSDL2 -lSDL2main -lSDL_image
 
 NAME	=	bomberman
 
 SRC		=	main.c \
-			game.c
+			game.c \
+			player.c
 
 OBJ		= 	$(SRC:.c=.o)
 
