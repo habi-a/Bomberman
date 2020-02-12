@@ -9,12 +9,12 @@
 #define _GAME_H_
 
 #include <SDL2/SDL.h>
-#include <SDL/SDL_image.h>
 
 #include "player.h"
 
 typedef struct game_s {
-    // SDL Variables
+    // Environment
+    int tile_size;
     SDL_Point screen_size;
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -24,10 +24,9 @@ typedef struct game_s {
 
 } game_t;
 
-game_t *game_init(int, int);
+game_t *game_init(int, int, int);
 void game_create_window(game_t *);
+void game_draw(game_t *);
 void game_destroy(game_t *);
-
-player_t *load_player(game_t *, int, int, const char *);
 
 #endif /* _GAME_H_ */

@@ -10,7 +10,7 @@
 
 #include "game.h"
 
-game_t *game_init(int screen_width, int screen_heigth)
+game_t *game_init(int screen_width, int screen_heigth, int tile_size)
 {
     game_t *game = malloc(sizeof(game_t));
 
@@ -23,7 +23,7 @@ game_t *game_init(int screen_width, int screen_heigth)
         game_destroy(game);
         exit(EXIT_FAILURE);
     }
-
+    game->tile_size = tile_size;
     game->screen_size.x = screen_width;
     game->screen_size.y = screen_heigth;
     game->renderer = NULL;
@@ -62,31 +62,16 @@ void game_destroy(game_t *game)
             SDL_DestroyWindow(game->window);
     }
     SDL_Quit();
-    free(game);
+    if (game != NULL)
+        free(game);
 }
 
-player_t *load_player(game_t *game, int x, int y, const char *file)
+void game_draw(game_t *game)
 {
-    player_t *player = player_init(x, y);
-
-    if (player == NULL) {
-        fprintf(stderr, "Failed to create player\n");
-        game_destroy(game);
-        exit(EXIT_FAILURE);
-    }
-    SDL_Surface *surface = IMG_Load(file);
-    if (surface == NULL) {
-        fprintf(stderr, "Failed to load image: %s\n", SDL_GetError());
-        free(player);
-        game_destroy(game);
-        exit(EXIT_FAILURE);
-    }
-    player->texture = SDL_CreateTextureFromSurface(game->renderer, surface);
-    if (player->texture == NULL) {
-        fprintf(stderr, "Failed to load texture: %s\n", SDL_GetError());
-        free(player);
-        game_destroy(game);
-        exit(EXIT_FAILURE);
-    }
-    return (player);
+    SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255);
+    SDL_RenderClear(game->renderer);
+    player_draw(game->player1, game->renderer);
+    SDL_RenderPresent(game->renderer);
+    SDL_Delay(3000);
 }
+

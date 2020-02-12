@@ -11,10 +11,16 @@
 
 int main()
 {
-    game_t *game = game_init(640, 480);
+    game_t *game = game_init(640, 480, 24);
 
-    game->player1 = load_player(game, 0, 0, "mario.png");
     game_create_window(game);
+    game->player1 = player_load(game->renderer, 0, 0, game->tile_size, "./mario.png");
+    if (game->player1 == NULL) {
+        game_destroy(game);
+        return (EXIT_FAILURE);
+    }
+    game_draw(game);
+    SDL_Delay(5000);
     game_destroy(game);
     return (EXIT_SUCCESS);
 }

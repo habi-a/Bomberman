@@ -7,7 +7,7 @@
 
 CC		= 	gcc
 CFLAGS	+= 	-Wall -Wextra -Werror -Wpedantic
-LDFLAGS	=	-lSDL2 -lSDL2main -lSDL_image
+LDFLAGS	=	-lSDL2 -lSDL2main -lSDL2_image
 
 NAME	=	bomberman
 
