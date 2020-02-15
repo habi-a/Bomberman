@@ -13,7 +13,9 @@ NAME	=	bomberman
 
 SRC		=	main.c \
 			app.c \
+			check_move.c \
 			game.c \
+			move.c \
 			player.c
 
 OBJ		= 	$(SRC:.c=.o)

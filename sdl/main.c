@@ -11,10 +11,12 @@
 
 int main()
 {
-    game_t *game = game_init(640, 480, 24);
+    const int tile_size = 24;
+    game_t *game = game_init(30 * tile_size, 20 * tile_size, tile_size);
 
     game_create_window(game);
-    game->player1 = player_load(game->renderer, 0, 0, game->tile_size, "./mario.png");
+    game->player1 = player_load(game->renderer, 0, 0
+                                , game->tile_size, "./mario.png");
     if (game->player1 == NULL) {
         game_destroy(game);
         return (EXIT_FAILURE);
