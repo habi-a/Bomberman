@@ -5,12 +5,12 @@
 **      fichier de jeu
 */
 
+#include "game.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "game.h"
-
-game_t *game_init(int screen_width, int screen_heigth, int tile_size)
+game_t *game_init(int screen_w, int screen_h, int tile_size, int max_bomb)
 {
     game_t *game = malloc(sizeof(game_t));
 
@@ -23,9 +23,10 @@ game_t *game_init(int screen_width, int screen_heigth, int tile_size)
         game_destroy(game);
         exit(EXIT_FAILURE);
     }
+    game->max_bombs = max_bomb;
     game->tile_size = tile_size;
-    game->screen_size.x = screen_width;
-    game->screen_size.y = screen_heigth;
+    game->screen_size.x = screen_w;
+    game->screen_size.y = screen_h;
     game->renderer = NULL;
     game->window = NULL;
     return (game);

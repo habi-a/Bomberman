@@ -11,7 +11,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "bag.h"
+
 typedef struct player_s {
+    bag_t *bag;
     SDL_Point coord;
     SDL_Rect position_rect;
     SDL_Texture *texture;

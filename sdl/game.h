@@ -22,9 +22,11 @@ typedef struct game_s {
     // Objects
     player_t *player1;
 
+    // Settings
+    int max_bombs;
 } game_t;
 
-game_t *game_init(int, int, int);
+game_t *game_init(int, int, int, int);
 void game_create_window(game_t *);
 void game_draw(game_t *);
 void game_destroy(game_t *);

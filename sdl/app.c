@@ -5,6 +5,7 @@
 **      application file
 */
 
+#include "action.h"
 #include "app.h"
 #include "move.h"
 
@@ -21,6 +22,7 @@ static void app_event_keyboard(game_t *game, SDL_Event *e, int *result)
         move(game, e->key.keysym.sym);
         break;
     case SDLK_SPACE:
+        action(game);
         break;
     default:
         break;

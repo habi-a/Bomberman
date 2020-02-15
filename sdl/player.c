@@ -5,9 +5,9 @@
 **      joueur
 */
 
-#include <stdio.h>
-
 #include "player.h"
+
+#include <stdio.h>
 
 static player_t *player_init(int x, int y, int tile_size)
 {
@@ -15,6 +15,7 @@ static player_t *player_init(int x, int y, int tile_size)
 
     if (player == NULL)
         return NULL;
+    player->bag = NULL;
     player->coord.x = x;
     player->coord.y = y;
     player->position_rect.x = player->coord.x * tile_size;
@@ -52,12 +53,15 @@ player_t *player_load(SDL_Renderer *renderer, int x, int y,
 
 void player_draw(player_t *player, SDL_Renderer *renderer)
 {
+    bag_draw(player->bag, renderer);
     SDL_RenderCopy(renderer, player->texture, NULL, &(player->position_rect));
 }
 
 void player_destroy(player_t *player)
 {
     if (player != NULL) {
+        if (player->bag != NULL)
+            bag_destroy(player->bag);
         if (player->texture != NULL)
             SDL_DestroyTexture(player->texture);
         free(player);
