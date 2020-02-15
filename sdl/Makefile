@@ -12,6 +12,7 @@ LDFLAGS	=	-lSDL2 -lSDL2main -lSDL2_image
 NAME	=	bomberman
 
 SRC		=	main.c \
+			app.c \
 			game.c \
 			player.c
 

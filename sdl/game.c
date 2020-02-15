@@ -72,6 +72,5 @@ void game_draw(game_t *game)
     SDL_RenderClear(game->renderer);
     player_draw(game->player1, game->renderer);
     SDL_RenderPresent(game->renderer);
-    SDL_Delay(3000);
 }
 

@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 
-#include "game.h"
+#include "app.h"
 
 int main()
 {
@@ -19,8 +19,7 @@ int main()
         game_destroy(game);
         return (EXIT_FAILURE);
     }
-    game_draw(game);
-    SDL_Delay(5000);
+    app_run(game);
     game_destroy(game);
     return (EXIT_SUCCESS);
 }

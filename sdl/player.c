@@ -11,7 +11,7 @@
 
 static player_t *player_init(int x, int y, int tile_size)
 {
-    player_t *player = malloc(sizeof(player));
+    player_t *player = malloc(sizeof(player_t));
 
     if (player == NULL)
         return NULL;
@@ -41,6 +41,7 @@ player_t *player_load(SDL_Renderer *renderer, int x, int y,
         return (NULL);
     }
     player->texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
     if (player->texture == NULL) {
         fprintf(stderr, "Failed to load texture: %s\n", SDL_GetError());
         free(player);
