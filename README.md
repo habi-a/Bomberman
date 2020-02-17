@@ -31,8 +31,8 @@
 
 #### _Touches :_
 
-- **Haut = **
-- **Bas = **
-- **Gauche = ** 
-- **Droite = ** 
-- **Action = **
+- **Haut =**
+- **Bas =**
+- **Gauche =** 
+- **Droite =** 
+- **Action =**
