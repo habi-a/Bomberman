@@ -16,6 +16,8 @@ int check_move_up(game_t *game)
         return (0);
     if (is_bomb_active_here(game, &to_go))
         return (0);
+    if (is_block_here(game, &to_go))
+        return (0);
     return (1);
 }
 
@@ -28,6 +30,8 @@ int check_move_down(game_t *game)
         return (0);
     if (is_bomb_active_here(game, &to_go))
         return (0);
+    if (is_block_here(game, &to_go))
+        return (0);
     return (1);
 }
 
@@ -38,6 +42,8 @@ int check_move_left(game_t *game)
     if (game->player1->coord.x * game->tile_size - 1 * game->tile_size < 0)
         return (0);
     if (is_bomb_active_here(game, &to_go))
+        return (0);
+    if (is_block_here(game, &to_go))
         return (0);
     return (1);
 }
@@ -50,6 +56,8 @@ int check_move_right(game_t *game)
                             > game->screen_size.x - 1 * game->tile_size)
         return (0);
     if (is_bomb_active_here(game, &to_go))
+        return (0);
+    if (is_block_here(game, &to_go))
         return (0);
     return (1);
 }

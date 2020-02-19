@@ -13,11 +13,20 @@ int is_bomb_active_here(game_t *game, SDL_Point *coord)
 
     while (bomb != NULL) {
         if (bomb->is_active
-                && bomb->coord.x == coord->x && bomb->coord.y == coord->y) {
+                && bomb->coord.x == coord->x && bomb->coord.y == coord->y)
             return (1);
-        }
         bomb = bomb->next;
     }
+    return (0);
+}
+
+int is_block_here(game_t *game, SDL_Point *coord)
+{
+    for (int i = 0; i < game->map->nb_block; i++)
+        if (!game->map->block[i]->is_destroyed
+            && game->map->block[i]->coord.x == coord->x
+            && game->map->block[i]->coord.y == coord->y)
+            return (1);
     return (0);
 }
 

@@ -56,7 +56,8 @@ bomb_t *bomb_load(SDL_Renderer *renderer
 
 void bomb_draw(bomb_t *bomb, SDL_Renderer *renderer)
 {
-    SDL_RenderCopy(renderer, bomb->texture, NULL, &(bomb->position_rect));
+    if (bomb->is_active)
+        SDL_RenderCopy(renderer, bomb->texture, NULL, &(bomb->position_rect));
 }
 
 void bomb_destroy(bomb_t *bomb)

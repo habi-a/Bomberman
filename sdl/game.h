@@ -10,6 +10,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "map.h"
 #include "player.h"
 
 typedef struct game_s {
@@ -20,6 +21,7 @@ typedef struct game_s {
     SDL_Renderer *renderer;
 
     // Objects
+    map_t *map;
     player_t *player1;
 
     // Settings

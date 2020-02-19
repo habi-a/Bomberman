@@ -15,9 +15,11 @@ SRC		=	main.c \
 			action.c \
 			app.c \
 			bag.c \
+			block.c \
 			bomb.c \
 			check_move.c \
 			game.c \
+			map.c \
 			move.c \
 			player.c
 

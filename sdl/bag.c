@@ -55,8 +55,7 @@ void bag_draw(bag_t *bag, SDL_Renderer *renderer)
     bomb_t *bomb = bag->first;
 
     while (bomb != NULL) {
-        if (bomb->is_active)
-            bomb_draw(bomb, renderer);
+        bomb_draw(bomb, renderer);
         bomb = bomb->next;
     }
 }

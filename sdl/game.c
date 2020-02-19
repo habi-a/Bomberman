@@ -23,6 +23,8 @@ game_t *game_init(int screen_w, int screen_h, int tile_size, int max_bomb)
         game_destroy(game);
         exit(EXIT_FAILURE);
     }
+    game->player1 = NULL;
+    game->map = NULL;
     game->max_bombs = max_bomb;
     game->tile_size = tile_size;
     game->screen_size.x = screen_w;
@@ -56,6 +58,8 @@ void game_destroy(game_t *game)
 {
     if (game->player1 != NULL)
         player_destroy(game->player1);
+    if (game->map != NULL)
+        map_destroy(game->map);
     if (game != NULL) {
         if (game->renderer != NULL)
             SDL_DestroyRenderer(game->renderer);
@@ -71,6 +75,7 @@ void game_draw(game_t *game)
 {
     SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255);
     SDL_RenderClear(game->renderer);
+    map_draw(game->map, game->renderer, game->tile_size);
     player_draw(game->player1, game->renderer);
     SDL_RenderPresent(game->renderer);
 }
