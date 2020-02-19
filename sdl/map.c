@@ -38,38 +38,38 @@ static map_t *map_init(SDL_Renderer *renderer)
     return (map);
 }
 
-map_t *map_load(SDL_Renderer *renderer, int tile_size
-                                    , const char *file)
+static int map_text_load(map_t *map, FILE *fp, int tile_size, int *i)
 {
-    int i = 0;
     int j = 0;
     int k = 0;
     int read = 0;
     char *line = NULL;
     long unsigned int len = 0;
-    FILE *fp = fopen(file, "r");
-    map_t *map = map_init(renderer);
 
-
-    map->nb_block = file_count(file);
-    map->block = malloc(map->nb_block * sizeof(block_t *));
-    printf("test\n");
     while ((read = getline(&line, &len, fp)) != -1 && k < map->nb_block) {
-        for (i = 0; i < read && line[i] != '\n'; i++) {
-            if (line[i] == 'W') {
-                map->block[k++] = block_load(map->wall_texture, i, j, tile_size);
-            }
-            else if (line[i] == 'X')
-                map->block[k++] = block_load(map->block_texture, i, j, tile_size);
+        for (*i = 0; *i < read && line[*i] != '\n'; *i += 1) {
+            if (line[*i] == 'W')
+                map->block[k++] = block_load(map->wall_texture, *i, j, tile_size);
+            else if (line[*i] == 'X')
+                map->block[k++] = block_load(map->block_texture, *i, j, tile_size);
         }
         j++;
     }
-    fclose(fp);
-    map->i_max = i;
-    map->j_max = j;
-    if (line != NULL) {
+    if (line != NULL)
         free(line);
-    }
+    return (j);
+}
+
+map_t *map_load(SDL_Renderer *renderer, int tile_size
+                                    , const char *file)
+{
+    FILE *fp = fopen(file, "r");
+    map_t *map = map_init(renderer);
+
+    map->nb_block = file_count(file);
+    map->block = malloc(map->nb_block * sizeof(block_t *));
+    map->j_max = map_text_load(map, fp, tile_size, &(map->i_max));
+    fclose(fp);
     return (map);
 }
 
