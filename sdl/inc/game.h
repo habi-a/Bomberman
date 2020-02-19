@@ -2,7 +2,7 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      Game definition
+**      Game definition file
 */
 
 #ifndef _GAME_H_

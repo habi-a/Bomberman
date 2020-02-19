@@ -2,10 +2,10 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      Le fichier principale
+**      Action function file
 */
 
-#include "action.h"
+#include "../inc/action.h"
 
 int is_bomb_active_here(game_t *game, SDL_Point *coord)
 {

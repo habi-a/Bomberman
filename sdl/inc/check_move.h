@@ -2,7 +2,7 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      defintion
+**      Check if player can move defintion file
 */
 
 #ifndef _CHECK_MOVE_H_

@@ -2,10 +2,10 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      Le fichier principale
+**      Bomb function file
 */
 
-#include "bag.h"
+#include "../inc/bag.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -17,7 +17,7 @@ static bomb_t *bomb_init(int tile_size)
     bomb_t *bomb = malloc(sizeof(bomb_t));
 
     if (bomb == NULL)
-        return NULL;
+        return (NULL);
     bomb->is_active = 0;
     bomb->coord.x = 0;
     bomb->coord.y = 0;
@@ -33,12 +33,14 @@ bomb_t *bomb_load(SDL_Renderer *renderer
                     , int tile_size, const char *file)
 {
     bomb_t *bomb = bomb_init(tile_size);
+    SDL_Surface *surface = NULL;
 
     if (bomb == NULL) {
         fprintf(stderr, "Failed to create bomb\n");
         return (NULL);
     }
-    SDL_Surface *surface = IMG_Load(file);
+    if (file != NULL)
+        surface = IMG_Load(file);
     if (surface == NULL) {
         fprintf(stderr, "Failed to load image: %s\n", SDL_GetError());
         free(bomb);

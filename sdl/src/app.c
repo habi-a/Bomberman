@@ -2,12 +2,12 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      application file
+**      App function file
 */
 
-#include "action.h"
-#include "app.h"
-#include "move.h"
+#include "../inc/action.h"
+#include "../inc/app.h"
+#include "../inc/move.h"
 
 static void app_event_keyboard(game_t *game, SDL_Event *e, int *result)
 {

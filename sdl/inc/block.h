@@ -2,7 +2,7 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      defintion
+**      Block defintion file
 */
 
 #ifndef _BLOCK_H_

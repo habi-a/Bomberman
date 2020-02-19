@@ -2,10 +2,10 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      fichier de jeu
+**      Game function file
 */
 
-#include "game.h"
+#include "../inc/game.h"
 
 #include <stdio.h>
 #include <stdlib.h>

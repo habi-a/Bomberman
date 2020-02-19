@@ -11,17 +11,17 @@ LDFLAGS	=	-lSDL2 -lSDL2main -lSDL2_image
 
 NAME	=	bomberman
 
-SRC		=	main.c \
-			action.c \
-			app.c \
-			bag.c \
-			block.c \
-			bomb.c \
-			check_move.c \
-			game.c \
-			map.c \
-			move.c \
-			player.c
+SRC		=	src/main.c \
+			src/action.c \
+			src/app.c \
+			src/bag.c \
+			src/block.c \
+			src/bomb.c \
+			src/check_move.c \
+			src/game.c \
+			src/map.c \
+			src/move.c \
+			src/player.c
 
 OBJ		= 	$(SRC:.c=.o)
 

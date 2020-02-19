@@ -1,11 +1,11 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\blockerman\sdl
+** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      Le fichier principale
+**      Map function file
 */
 
-#include "map.h"
+#include "../inc/map.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,9 +31,9 @@ static map_t *map_init(SDL_Renderer *renderer)
     map->i_max = 0;
     map->j_max = 0;
     map->nb_block = 0;
-    map->block_texture = load_block_texture(renderer, "./block.png");
-    map->wall_texture = load_block_texture(renderer, "./wall.png");
-    map->floor_texture = load_block_texture(renderer, "./floor.png");
+    map->block_texture = load_block_texture(renderer, "./rsc/block.png");
+    map->wall_texture = load_block_texture(renderer, "./rsc/wall.png");
+    map->floor_texture = load_block_texture(renderer, "./rsc/floor.png");
     map->block = NULL;
     return (map);
 }

@@ -2,11 +2,11 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      Le fichier principale
+**      Check if player can move function file
 */
 
-#include "action.h"
-#include "check_move.h"
+#include "../inc/action.h"
+#include "../inc/check_move.h"
 
 int check_move_up(game_t *game)
 {

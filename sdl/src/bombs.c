@@ -2,10 +2,10 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      Le fichier principale
+**      Bomb list function file
 */
 
-#include "bag.h"
+#include "../inc/bag.h"
 
 #include <stdlib.h>
 

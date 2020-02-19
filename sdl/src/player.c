@@ -2,10 +2,10 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      joueur
+**      Player function file
 */
 
-#include "player.h"
+#include "../inc/player.h"
 
 #include <stdio.h>
 
@@ -29,13 +29,15 @@ static player_t *player_init(int x, int y, int tile_size)
 player_t *player_load(SDL_Renderer *renderer, int x, int y, 
                         int tile_size, const char *file)
 {
+    SDL_Surface *surface = NULL;
     player_t *player = player_init(x, y, tile_size);
 
     if (player == NULL) {
         fprintf(stderr, "Failed to create player\n");
         return (NULL);
     }
-    SDL_Surface *surface = IMG_Load(file);
+    if (file != NULL)
+        surface = IMG_Load(file);
     if (surface == NULL) {
         fprintf(stderr, "Failed to load image: %s\n", SDL_GetError());
         free(player);

@@ -2,10 +2,10 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      Le fichier principale
+**      Block function file
 */
 
-#include "block.h"
+#include "../inc/block.h"
 
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
@@ -14,8 +14,10 @@
 SDL_Texture *load_block_texture(SDL_Renderer *renderer, const char *image)
 {
     SDL_Texture *texture = NULL;
-    SDL_Surface *surface = IMG_Load(image);
-
+    SDL_Surface *surface = NULL;
+    
+    if (image != NULL)
+        surface = IMG_Load(image);
     if (surface == NULL) {
         fprintf(stderr, "Failed to load image: %s\n", SDL_GetError());
         return (NULL);
