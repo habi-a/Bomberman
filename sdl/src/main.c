@@ -11,7 +11,7 @@
 
 int main()
 {
-    const int tile_size = 38;
+    const int tile_size = 32;
     game_t *game = game_init(25 * tile_size, 21 * tile_size, tile_size, 2);
 
     game_create_window(game);
