@@ -4,20 +4,21 @@
 
 ### _Afin de faire fonctionner notre programme, nous avons besoin de :_
 
-- **Docker**
+- **Docker OU une machine Linux/Mac avec gcc make et les libsdl2 installées**
 
-### _Installation du projet :_
+### _Installation et lancement du projet :_
 
 - **$> git clone {projet}**
 - **$> cd {projet}**
-- **$> docker build -t sdl_project .**
 
-### _Lancement du projet :_
+Si utilisation de docker:
+- **$> docker build -t bomberman .**
+- **$> docker run --rm -it -v ${PWD}:/app sdl_project**
 
-- **$> docker run --rm -it -v ~/ETNA/student/Bomberman:/root sdl_project**
-- **root$> cd {project}/sdl**
-- **root$> make**
-- **root$> ./bomberman**
+Ensuite:
+- **$> cd {sub_project} (par exemple "sdl/"**
+- **$> make**
+- **$> ./bomberman**
 
 ### _Informations Supplémentaire :_
 
@@ -31,8 +32,8 @@
 
 #### _Touches :_
 
-- **Haut =**
-- **Bas =**
-- **Gauche =** 
-- **Droite =** 
-- **Action =**
+- **Haut = Flèche du Haut**
+- **Bas = Flèche du Bas**
+- **Gauche = Flèche de Gauche** 
+- **Droite = Flèche de Droite** 
+- **Action = Espace**
