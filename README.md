@@ -16,7 +16,7 @@ Si utilisation de docker:
 - **$> docker run --rm -it -v ${PWD}:/app sdl_project**
 
 Ensuite:
-- **$> cd {sub_project} (par exemple "sdl/"**
+- **$> cd {sub_project} (par exemple "sdl/")**
 - **$> make**
 - **$> ./bomberman**
 
