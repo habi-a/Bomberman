@@ -56,4 +56,3 @@ void move(game_t *game, SDL_Keycode direction)
         break;
     }
 }
-

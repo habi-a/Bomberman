@@ -7,12 +7,13 @@
 
 CC		= 	gcc
 CFLAGS	+= 	-Wall -Wextra -Werror -Wpedantic
-LDFLAGS	=	-lSDL2 -lSDL2main -lSDL2_image
+LDFLAGS	=	-lSDL2 -lSDL2main -lSDL2_image -lSDL2_ttf
 
 NAME	=	bomberman
 
 SRC		=	src/main.c \
 			src/app.c \
+			src/button.c \
 			src/menu_state.c
 
 OBJ		= 	$(SRC:.c=.o)

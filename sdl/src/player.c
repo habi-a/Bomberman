@@ -26,7 +26,7 @@ static player_t *player_init(int x, int y, int tile_size)
     return (player);
 }
 
-player_t *player_load(SDL_Renderer *renderer, int x, int y, 
+player_t *player_load(SDL_Renderer *renderer, int x, int y,
                         int tile_size, const char *file)
 {
     SDL_Surface *surface = NULL;

@@ -2,7 +2,7 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\sdl
 ** File description:
-**      defintion
+**      Map defintion file
 */
 
 #ifndef _MAP_H_

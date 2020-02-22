@@ -35,14 +35,22 @@ static SDL_Texture *menu_background(app_t *app)
 static menu_t *menu_create(app_t *app)
 {
     menu_t *menu = malloc(sizeof(menu_t));
+    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 10 * app->tile_size, 8.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 12 * app->tile_size, 9.5 * app->tile_size, 1.1 *app->tile_size };
+    SDL_Rect button_pos3 = { 1.5 * app->tile_size, 14 * app->tile_size, 3.1 * app->tile_size, 1.1 * app->tile_size };
 
     if (menu == NULL) {
-        fprintf(stderr, "Failed to malloc menu");
+        fprintf(stderr, "Failed to malloc menu\n");
         return (NULL);
     }
     menu->texture = menu_background(app);
     if (menu->texture == NULL)
         return(NULL);
+    menu->buttons[0] = button_create(app, "Heberger une partie", button_pos1);
+    menu->buttons[1] = button_create(app, "Se connecter a une partie", button_pos2);
+    menu->buttons[2] = button_create(app, "Sortir", button_pos3);
+    menu->index_select = 0;
+    menu->buttons[menu->index_select]->selected = 1;
     return (menu);
 }
 
@@ -53,32 +61,70 @@ static void menu_draw(app_t *app, menu_t *menu)
     SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
     SDL_RenderClear(app->renderer);
     SDL_RenderCopy(app->renderer, menu->texture, NULL, &full_screen);
+    for (int i = 0; i < 3; i++)
+        button_draw(app, menu->buttons[i]);
     SDL_RenderPresent(app->renderer);
 }
 
-static int menu_event(menu_t *menu, int *exit_code) 
+static void move_up(menu_t *menu)
+{
+    if (menu->index_select > 0) {
+        menu->buttons[menu->index_select--]->selected = 0;
+        menu->buttons[menu->index_select]->selected = 1;
+    }
+}
+
+static void move_down(menu_t *menu)
+{
+    if (menu->index_select < 2) {
+        menu->buttons[menu->index_select++]->selected = 0;
+        menu->buttons[menu->index_select]->selected = 1;
+    }
+}
+
+static int menu_enter(menu_t *menu)
+{
+    switch (menu->index_select) {
+    case 0:
+        return (STATE_SERVER);
+    case 1:
+        return (STATE_CLIENT);
+    case 2:
+        return (STATE_EXIT);
+    default:
+        break;
+    }
+    return (STATE_MENU);
+}
+
+static int menu_event(menu_t *menu, int exit_code)
 {
     SDL_Event e;
 
-    menu = menu;
     if (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT)
-            *exit_code = STATE_EXIT;
+            exit_code = STATE_EXIT;
         else if (e.type == SDL_KEYDOWN) {
             switch (e.key.keysym.sym)
             {
             case SDLK_ESCAPE:
-                *exit_code = STATE_EXIT;
+                exit_code = STATE_EXIT;
+                break;
+            case SDLK_RETURN:
+                exit_code = menu_enter(menu);
+                break;
             case SDLK_UP:
+                move_up(menu);
                 break;
             case SDLK_DOWN:
+                move_down(menu);
                 break;
             default:
                 break;
             }
         }
     }
-    return (*exit_code);
+    return (exit_code);
 }
 
 static void menu_destroy(menu_t *menu)
@@ -86,6 +132,11 @@ static void menu_destroy(menu_t *menu)
     if (menu != NULL) {
         if (menu->texture != NULL)
             SDL_DestroyTexture(menu->texture);
+        if (menu->buttons != NULL) {
+            for (int i = 0; i < 3; i++)
+                if (menu->buttons[i] != NULL)
+                    button_destroy(menu->buttons[i]);
+        }
         free(menu);
     }
 }
@@ -99,10 +150,9 @@ int menu_run(app_t *app)
         return (STATE_EXIT);
     while (exit_code == STATE_MENU) {
         menu_draw(app, menu);
-        exit_code = menu_event(menu, &exit_code);
+        exit_code = menu_event(menu, exit_code);
         SDL_Delay(20);
     }
     menu_destroy(menu);
     return (exit_code);
 }
-

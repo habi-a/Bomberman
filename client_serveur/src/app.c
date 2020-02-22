@@ -15,7 +15,7 @@ static app_t *app_init(int screen_w, int screen_h, int tile_size)
     app_t *app = malloc(sizeof(app_t));
 
     if (app == NULL) {
-        fprintf(stderr, "Failed to malloc app");
+        fprintf(stderr, "Failed to malloc app\n");
         exit(EXIT_FAILURE);
     }
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -23,6 +23,14 @@ static app_t *app_init(int screen_w, int screen_h, int tile_size)
         app_destroy(app);
         exit(EXIT_FAILURE);
     }
+    if (TTF_Init() != 0) {
+        fprintf(stderr, "Failed to initialized the SDL_TTF: %s\n", TTF_GetError());
+        app_destroy(app);
+        exit(EXIT_FAILURE);
+    }
+    app->font = NULL;
+    app->renderer = NULL;
+    app->window = NULL;
     app->tile_size = tile_size;
     app->screen_size.x = screen_w;
     app->screen_size.y = screen_h;
@@ -48,6 +56,12 @@ app_t *app_start(int screen_w, int screen_h, int tile_size)
         app_destroy(app);
         exit(EXIT_FAILURE);
     }
+    app->font = TTF_OpenFont("./rsc/bomberman.ttf", 24);
+    if (app->font == NULL) {
+        fprintf(stderr, "Failed to load ttf: %s\n", TTF_GetError());
+        app_destroy(app);
+        exit(EXIT_FAILURE);
+    }
     return (app);
 }
 
@@ -59,6 +73,9 @@ void app_destroy(app_t *app)
             SDL_DestroyRenderer(app->renderer);
         if (app->window != NULL)
             SDL_DestroyWindow(app->window);
+        if (app->font != NULL)
+            TTF_CloseFont(app->font);
+        TTF_Quit();
         SDL_Quit();
         free(app);
     }

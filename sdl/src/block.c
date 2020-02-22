@@ -15,7 +15,7 @@ SDL_Texture *load_block_texture(SDL_Renderer *renderer, const char *image)
 {
     SDL_Texture *texture = NULL;
     SDL_Surface *surface = NULL;
-    
+
     if (image != NULL)
         surface = IMG_Load(image);
     if (surface == NULL) {

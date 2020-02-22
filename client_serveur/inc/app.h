@@ -9,9 +9,11 @@
 #define _APP_H_
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 typedef struct app_s {
     int tile_size;
+    TTF_Font *font;
     SDL_Point screen_size;
     SDL_Window *window;
     SDL_Renderer *renderer;

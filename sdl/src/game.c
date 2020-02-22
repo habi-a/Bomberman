@@ -45,7 +45,7 @@ void game_create_window(game_t *game)
         game_destroy(game);
         exit(EXIT_FAILURE);
     }
-    game->renderer = SDL_CreateRenderer(game->window, -1, 
+    game->renderer = SDL_CreateRenderer(game->window, -1,
                                         SDL_RENDERER_ACCELERATED);
     if (game->renderer == NULL) {
         fprintf(stderr, "Failed to create the renderer: %s\n", SDL_GetError());
@@ -79,4 +79,3 @@ void game_draw(game_t *game)
     player_draw(game->player1, game->renderer);
     SDL_RenderPresent(game->renderer);
 }
-
