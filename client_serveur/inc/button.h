@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\sdl
+** c:\Users\habiy\Documents\bomberman\client_server
 ** File description:
 **      Button defintion file
 */
@@ -20,6 +20,8 @@ typedef struct button_s {
     SDL_Texture *texture_normal;
     SDL_Texture *texture_select;
 } button_t;
+
+SDL_Texture *load_text_texture(app_t *, const char *, SDL_Color *);
 
 button_t *button_create(app_t *, const char *, SDL_Rect);
 void button_draw(app_t *, button_t *);

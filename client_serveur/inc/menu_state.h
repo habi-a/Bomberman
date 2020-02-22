@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\sdl
+** c:\Users\habiy\Documents\bomberman\client_server
 ** File description:
 **      Menu defintion file
 */
@@ -10,7 +10,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "button.h"
 

@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\sdl
+** c:\Users\habiy\Documents\bomberman\client_server
 ** File description:
 **      State defintion file
 */
@@ -9,6 +9,7 @@
 #define _STATE_H_
 
 #include "menu_state.h"
+#include "server_state.h"
 
 #define STATE_MENU 0
 #define STATE_SERVER 1

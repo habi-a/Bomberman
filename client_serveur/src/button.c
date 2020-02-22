@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\sdl
+** c:\Users\habiy\Documents\bomberman\client_server
 ** File description:
 **      Button function file
 */
@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static SDL_Texture *load_text_texture(app_t *app, const char *text, SDL_Color *color)
+SDL_Texture *load_text_texture(app_t *app, const char *text, SDL_Color *color)
 {
     SDL_Texture *texture = NULL;
     SDL_Surface *surface = TTF_RenderText_Solid(app->font, text, *color);

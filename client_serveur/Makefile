@@ -14,7 +14,8 @@ NAME	=	bomberman
 SRC		=	src/main.c \
 			src/app.c \
 			src/button.c \
-			src/menu_state.c
+			src/menu_state.c \
+			src/server_state.c
 
 OBJ		= 	$(SRC:.c=.o)
 
