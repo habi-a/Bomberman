@@ -6,6 +6,7 @@
 */
 
 #include "../inc/app.h"
+#include "../inc/client.h"
 #include "../inc/client_state.h"
 #include "../inc/state.h"
 
@@ -92,6 +93,7 @@ static int client_state_enter(app_t *app, client_state_t *client_state, char inp
     case 2:
         client_state->index_select++;
         app->port = SDL_atoi(input_text);
+        client_launch(app);
         return (STATE_EXIT);
     default:
         break;

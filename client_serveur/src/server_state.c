@@ -7,6 +7,7 @@
 
 #include "../inc/app.h"
 #include "../inc/server_state.h"
+#include "../inc/server.h"
 #include "../inc/state.h"
 
 #include <stdio.h>
@@ -83,6 +84,7 @@ static int server_state_enter(app_t *app, server_state_t *server_state, char inp
         server_state->index_select++;
         app->port = SDL_atoi(input_text);
         move_down(server_state);
+        server_launch(app);
         return (STATE_EXIT);
     default:
         break;
