@@ -2,11 +2,11 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\client_server
 ** File description:
-**      Server state defintion file
+**      Client state defintion file
 */
 
-#ifndef _SERVER_STATE_H_
-#define _SERVER_STATE_H_
+#ifndef _client_STATE_H_
+#define _client_STATE_H_
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -14,12 +14,12 @@
 
 #include "button.h"
 
-typedef struct server_state_s {
+typedef struct client_state_s {
     int index_select;
     SDL_Texture *texture;
-    button_t *buttons[4];
-} server_state_t;
+    button_t *buttons[6];
+} client_state_t;
 
-int server_state_run(app_t *);
+int client_state_run(app_t *);
 
-#endif /* _SERVER_STATE_H_ */
+#endif /* _client_STATE_H_ */

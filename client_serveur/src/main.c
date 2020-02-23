@@ -17,7 +17,8 @@ int main()
     app_t *app = app_start(25 * tile_size, 21 * tile_size, tile_size);
     state_run_t state_run[STATE_NB] = {
         &menu_run,
-        &server_state_run
+        &server_state_run,
+        &client_state_run
     };
 
     while (state != STATE_EXIT)

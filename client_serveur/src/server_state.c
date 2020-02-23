@@ -11,7 +11,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 static SDL_Texture *server_state_background(app_t *app)
 {
@@ -36,8 +35,8 @@ static SDL_Texture *server_state_background(app_t *app)
 static server_state_t *server_state_create(app_t *app)
 {
     server_state_t *server_state = malloc(sizeof(server_state_t));
-    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 10 * app->tile_size, 3 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 12 * app->tile_size, 0.3 * app->tile_size, 1 * app->tile_size };
+    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 10 * app->tile_size, 2.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 12 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
     SDL_Rect button_pos3 = { 1.5 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
     SDL_Rect button_pos4 = { 9.25 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
 
@@ -77,13 +76,13 @@ static void move_down(server_state_t *server_state)
     }
 }
 
-static int server_state_enter(server_state_t *server_state)
+static int server_state_enter(app_t *app, server_state_t *server_state, char input_text[17])
 {
     switch (server_state->index_select) {
     case 0:
+        server_state->index_select++;
+        app->port = SDL_atoi(input_text);
         move_down(server_state);
-        break;
-    case 1:
         return (STATE_EXIT);
     default:
         break;
@@ -91,7 +90,7 @@ static int server_state_enter(server_state_t *server_state)
     return (STATE_SERVER);
 }
 
-static int server_state_event(app_t *app, server_state_t *server_state, char port_string[6], int *len)
+static int server_state_event(app_t *app, server_state_t *server_state, char input_text[17], int *len)
 {
     int change_made = 0;
     int exit_code = STATE_SERVER;
@@ -99,33 +98,33 @@ static int server_state_event(app_t *app, server_state_t *server_state, char por
     SDL_Color color = { 255, 255, 255, 255 };
 
     if (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT)
+        if (e.type == SDL_QUIT) {
             exit_code = STATE_EXIT;
-        else if (e.type == SDL_KEYDOWN) {
+        } else if (e.type == SDL_KEYDOWN) {
             switch (e.key.keysym.sym)
             {
             case SDLK_BACKSPACE:
                 if (*len) {
-                    port_string[*len - 1] = 0;
+                    input_text[*len - 1] = 0;
                     *len -= 1;
                     change_made = 1;
-                    server_state->buttons[1]->position.w -= 0.7 * app->tile_size;
+                    server_state->buttons[1]->position.w -= 0.5 * app->tile_size;
                 }
                 break;
             case SDLK_ESCAPE:
                 exit_code = STATE_MENU;
                 break;
             case SDLK_RETURN:
-                exit_code = server_state_enter(server_state);
+                exit_code = server_state_enter(app, server_state, input_text);
                 break;
             default:
                 break;
             }
         } else if (e.type == SDL_TEXTINPUT) {
             if (*len < 5) {
-                port_string[*len] = e.text.text[0];
+                input_text[*len] = e.text.text[0];
                 *len += 1;
-                server_state->buttons[1]->position.w += 0.7 * app->tile_size;
+                server_state->buttons[1]->position.w += 0.5 * app->tile_size;
                 change_made = 1;
             }
         }
@@ -133,12 +132,12 @@ static int server_state_event(app_t *app, server_state_t *server_state, char por
     if (change_made) {
         if (server_state->buttons[1]->texture_normal != NULL)
             SDL_DestroyTexture(server_state->buttons[1]->texture_normal);
-        if (!SDL_strcmp(port_string, ""))
+        if (!SDL_strcmp(input_text, ""))
             server_state->buttons[1]->texture_normal
                         = load_text_texture(app, " ", &color);
         else
             server_state->buttons[1]->texture_normal 
-                        = load_text_texture(app, port_string, &color);
+                        = load_text_texture(app, input_text, &color);
     }
     return (exit_code);
 }
@@ -161,7 +160,7 @@ int server_state_run(app_t *app)
 {
     int len = 0;
     int exit_code = STATE_SERVER;
-    char port_string[6] = { 0 };
+    char port_text[17] = { 0 };
     server_state_t *server_state = server_state_create(app);
 
     if (server_state == NULL)
@@ -169,7 +168,8 @@ int server_state_run(app_t *app)
     SDL_StartTextInput();
     while (exit_code == STATE_SERVER) {
         server_state_draw(app, server_state);
-        exit_code = server_state_event(app, server_state, port_string, &len);
+        if (!server_state->index_select)
+            exit_code = server_state_event(app, server_state, port_text, &len);
         SDL_Delay(20);
     }
     SDL_StopTextInput();
