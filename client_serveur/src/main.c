@@ -19,7 +19,8 @@ int main()
         &menu_run,
         &server_state_run,
         &client_state_run,
-        &server_run
+        &server_run,
+        &client_run
     };
 
     while (state != STATE_EXIT)

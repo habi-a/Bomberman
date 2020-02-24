@@ -5,12 +5,66 @@
 **      Client function file
 */
 
+#include "../inc/action.h"
+#include "../inc/app.h"
 #include "../inc/client.h"
+#include "../inc/move.h"
+#include "../inc/state.h"
 
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e, int id
+                                , int is_connected)
+{
+    int result = STATE_CLIENT_SOCKET;
+
+    switch (e->key.keysym.sym) {
+    case SDLK_ESCAPE:
+        result = STATE_CLIENT;
+        break;
+    case SDLK_UP:
+    case SDLK_DOWN:
+    case SDLK_LEFT:
+    case SDLK_RIGHT:
+        if (is_connected)
+            move(app, game, id - 1, e->key.keysym.sym);
+        break;
+    case SDLK_SPACE:
+        if (is_connected)
+            action(game, id - 1);
+        break;
+    default:
+        break;
+    }
+    return (result);
+}
+
+static int client_event(app_t *app, game_t *game, int actual_index, int conn)
+{
+    SDL_Event e;
+    int result = STATE_CLIENT_SOCKET;
+
+    if (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT)
+            result = STATE_EXIT;
+        else if (e.type == SDL_KEYDOWN) {
+            result = client_event_keyboard(app, game, &e, actual_index, conn);
+        }
+    }
+    return (result);
+}
+
+static void client_waiting_draw(app_t *app, button_t *button)
+{
+    SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
+    SDL_RenderClear(app->renderer);
+    button_draw(app, button);
+    SDL_RenderPresent(app->renderer);
+}
+
 
 static int init_connection(const char *address, int port, sockaddr_in_t *sin)
 {
@@ -55,44 +109,55 @@ void write_server(int socketfd, sockaddr_in_t *sin, const char *buffer)
     }
 }
 
-void client_launch(app_t *app)
+int client_run(app_t *app)
 {
+    int id = 0;
+    int connected = 0;
     int n;
     int socketfd;
+    int state = STATE_CLIENT_SOCKET;
     char buffer[BUF_SIZE];
     fd_set rdfs;
     sockaddr_in_t sin;
+    game_t *game = game_create(app);
+    SDL_Rect button_pos1 = { 7.5 * app->tile_size, 10 * app->tile_size
+                            , 10 * app->tile_size, 1.1 * app->tile_size };
+    button_t *wait_text = button_create(app, "Connexion en cours...", button_pos1);
+    struct timeval waitd = { 0, 0 };
 
     memset(&sin, 0, sizeof(sin));
     socketfd = init_connection(app->ip, app->port, &sin);
     write_server(socketfd, &sin, " ");
-    while (1) {
+    while (state == STATE_CLIENT_SOCKET) {
         FD_ZERO(&rdfs);
         FD_SET(STDIN_FILENO, &rdfs);
         FD_SET(socketfd, &rdfs);
-        if (select(socketfd + 1, &rdfs, NULL, NULL, NULL) == -1) {
+        if (select(socketfd + 1, &rdfs, NULL, NULL, &waitd) == -1) {
             perror("select()");
             exit(errno);
-        }
-        if (FD_ISSET(STDIN_FILENO, &rdfs)) {
-            fgets(buffer, BUF_SIZE - 1, stdin); {
-                char *p;
-
-                p = NULL;
-                if ((p = strstr(buffer, "\n")) != NULL)
-                    *p = 0;
-                else
-                    buffer[BUF_SIZE - 1] = 0;
-            }
-            write_server(socketfd, &sin, buffer);
         }
         else if (FD_ISSET(socketfd, &rdfs)) {
             if ((n = read_server(socketfd, &sin, buffer)) == 0) {
                 printf("\033[0;31mServer disconnected !\033[0m\n");
                 break;
             }
+            if (!connected) {
+                id = buffer[0] - '0';
+                for (int i = 0; i < id; i++)
+                    game->players[i]->is_alive = 1;
+                connected = 1;
+            }
             puts(buffer);
         }
+        state = client_event(app, game, id, connected);
+        if (connected)
+            game_draw(app, game);
+        else
+            client_waiting_draw(app, wait_text);
+        SDL_Delay(20);
     }
+    button_destroy(wait_text);
     closesocket(socketfd);
+    game_destroy(game);
+    return (state);
 }

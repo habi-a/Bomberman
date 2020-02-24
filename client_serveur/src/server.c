@@ -97,16 +97,18 @@ int server_run(app_t *app)
     fd_set rdfs;
     game_t *game = game_create(app);
     client_t clients[MAX_CLIENTS];
-    SDL_Rect button_pos1 = { 10 * app->tile_size, 10 * app->tile_size
+    SDL_Rect button_pos1 = { 7.5 * app->tile_size, 10 * app->tile_size
                             , 10 * app->tile_size, 1.1 * app->tile_size };
     button_t *wait_text = button_create(app, "En attente de joueurs...", button_pos1);
+    struct timeval waitd = { 0, 0 };
 
     create_client(&actual_index, sin, clients);
+    game->players[actual_index - 1]->is_alive = 1;
     while (state == STATE_SERVER_SOCKET) {
         FD_ZERO(&rdfs);
         FD_SET(STDIN_FILENO, &rdfs);
         FD_SET(socketfd, &rdfs);
-        if (select(max_index + 1, &rdfs, NULL, NULL, NULL) == -1) {
+        if (select(max_index + 1, &rdfs, NULL, NULL, &waitd) == -1) {
             perror("select()");
             exit(errno);
         }
@@ -127,6 +129,7 @@ int server_run(app_t *app)
             }
             else if (actual_index != MAX_CLIENTS) {
                 create_client(&actual_index, csin, clients);
+                game->players[actual_index - 1]->is_alive = 1;
                 send_notif_join(socketfd, clients, &clients[actual_index - 1], actual_index);
                 printf("Player %d joined the game\n", clients[actual_index - 1].index);
             }
@@ -136,7 +139,6 @@ int server_run(app_t *app)
             game_draw(app, game);
         else
             server_waiting_draw(app, wait_text);
-        printf("test\n");
         SDL_Delay(20);
     }
     button_destroy(wait_text);

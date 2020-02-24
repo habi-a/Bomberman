@@ -14,11 +14,11 @@ static int game_create_players(app_t *app, game_t *game)
 {
     game->players[0] = player_load(app->renderer, 1, 1, app->tile_size,
                                                         "./rsc/player.png");
-    game->players[1] = player_load(app->renderer, 1, 2, app->tile_size,
+    game->players[1] = player_load(app->renderer, 23, 1, app->tile_size,
                                                         "./rsc/player.png");
-    game->players[2] = player_load(app->renderer, 1, 3, app->tile_size,
+    game->players[2] = player_load(app->renderer, 23, 19, app->tile_size,
                                                         "./rsc/player.png");
-    game->players[3] = player_load(app->renderer, 1, 4, app->tile_size,
+    game->players[3] = player_load(app->renderer, 1, 19, app->tile_size,
                                                         "./rsc/player.png");
     if (game->players[0] == NULL || game->players[1] == NULL
         || game->players[2] == NULL || game->players[3] == NULL)

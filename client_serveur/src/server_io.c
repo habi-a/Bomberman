@@ -35,15 +35,14 @@ static void write_client(int socketfd, sockaddr_in_t *sin, const char *buffer)
 
 void send_notif_join(int socketfd, client_t *clients, client_t *sender, int actual)
 {
-    int i = 0;
-    char index_player[2];
+    int i = 1;
+    char index_string[2] = { 0 };
     char message[BUF_SIZE] = { 0 };
 
-    sprintf(index_player, "%d", sender->index);
+    sprintf(index_string, "%d", sender->index);
+    strncpy(message, index_string, BUF_SIZE - 1);
+    strncat(message, " join", sizeof(message) - strlen(message) - 1);
     while (i < actual) {
-        strncpy(message, "\033[0;32m*** Player ", BUF_SIZE - 1);
-        strncat(message, index_player, sizeof(message) - strlen(message) - 1);
-        strncat(message, " joined the game ***\033[0m", sizeof(message) - strlen(message) - 1);
         write_client(socketfd, &clients[i].sin, message);
         i++;
     }
@@ -52,7 +51,7 @@ void send_notif_join(int socketfd, client_t *clients, client_t *sender, int actu
 
 void send_all_clients(int socketfd, client_t *clients, client_t *sender, int actual, const char *buffer)
 {
-    int i = 0;
+    int i = 1;
 
     while (i < actual) {
         if (sender != &clients[i])

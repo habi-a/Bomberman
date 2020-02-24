@@ -27,7 +27,7 @@ typedef   struct sockaddr     sockaddr_t;
 typedef   struct in_addr      in_addr_bis_t;
 typedef   struct hostent      hostent_t;
 
-void      client_launch(app_t *app);
+int      client_run(app_t *app);
 int       read_server(int socketfd, sockaddr_in_t *sin, char *buffer);
 void      write_server(int socketfd, sockaddr_in_t *sin, const char *buffer);
 

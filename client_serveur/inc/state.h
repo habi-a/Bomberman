@@ -8,6 +8,7 @@
 #ifndef _STATE_H_
 #define _STATE_H_
 
+#include "client.h"
 #include "client_state.h"
 #include "menu_state.h"
 #include "server_state.h"
