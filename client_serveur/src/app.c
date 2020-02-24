@@ -80,3 +80,4 @@ void app_destroy(app_t *app)
         free(app);
     }
 }
+
