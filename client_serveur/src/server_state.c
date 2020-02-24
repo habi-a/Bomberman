@@ -84,8 +84,7 @@ static int server_state_enter(app_t *app, server_state_t *server_state, char inp
         server_state->index_select++;
         app->port = SDL_atoi(input_text);
         move_down(server_state);
-        server_launch(app);
-        return (STATE_EXIT);
+        return (STATE_SERVER_SOCKET);
     default:
         break;
     }
@@ -138,7 +137,7 @@ static int server_state_event(app_t *app, server_state_t *server_state, char inp
             server_state->buttons[1]->texture_normal
                         = load_text_texture(app, " ", &color);
         else
-            server_state->buttons[1]->texture_normal 
+            server_state->buttons[1]->texture_normal
                         = load_text_texture(app, input_text, &color);
     }
     return (exit_code);

@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\sdl
+** c:\Users\habiy\Documents\bomberman\client_serveur
 ** File description:
 **      Move defintion file
 */
@@ -10,6 +10,6 @@
 
 #include "game.h"
 
-void move(game_t *game, SDL_Keycode direction);
+void move(app_t *app, game_t *game, int index_player, SDL_Keycode direction);
 
 #endif /* _MOVE_H_ */

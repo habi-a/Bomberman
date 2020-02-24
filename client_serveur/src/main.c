@@ -18,7 +18,8 @@ int main()
     state_run_t state_run[STATE_NB] = {
         &menu_run,
         &server_state_run,
-        &client_state_run
+        &client_state_run,
+        &server_run
     };
 
     while (state != STATE_EXIT)

@@ -9,6 +9,8 @@
 #define _SERVER_H_
 
 #include "app.h"
+#include "game.h"
+#include "button.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -32,9 +34,10 @@ typedef   struct              s_client {
     int                       index;
 }                             client_t;
 
+client_t  create_client(int *actual_index, sockaddr_in_t csin, client_t clients[MAX_CLIENTS]);
 int       read_client(int socketfd, sockaddr_in_t *csin, char *buffer);
 int       client_exists(client_t *clients, sockaddr_in_t *csin, int actual);
-void      server_launch(app_t *app);
+int       server_run(app_t *app);
 void      send_notif_join(int socketfd, client_t *clients, client_t *sender, int actual);
 void      send_all_clients(int socketfd, client_t *clients, client_t *client, int actual, const char *buffer);
 void      remove_client(client_t *clients, int to_remove, int *actual);

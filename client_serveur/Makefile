@@ -12,14 +12,24 @@ LDFLAGS	=	-lSDL2 -lSDL2main -lSDL2_image -lSDL2_ttf
 NAME	=	bomberman
 
 SRC		=	src/main.c \
+			src/action.c \
 			src/app.c \
+			src/bag.c \
+			src/block.c \
+			src/bomb.c \
 			src/button.c \
+			src/check_move.c \
 			src/client.c \
 			src/client_state.c \
+			src/game.c \
+			src/map.c \
 			src/menu_state.c \
+			src/move.c \
+			src/player.c \
 			src/server.c \
 			src/server_io.c \
-			src/server_state.c
+			src/server_state.c \
+			src/server_users.c
 
 OBJ		= 	$(SRC:.c=.o)
 
