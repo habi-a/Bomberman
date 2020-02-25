@@ -16,9 +16,9 @@ int main()
 
     game_create_window(game);
     game->map = map_load(game->renderer, game->tile_size, "./rsc/map.txt");
-    game->player1 = player_load(game->renderer, 1, 1, game->tile_size, 
+    game->player1 = player_load(game->renderer, 1, 1, game->tile_size,
                                                         "./rsc/player.png");
-    game->player1->bag = bag_load(game->renderer, game->tile_size, 
+    game->player1->bag = bag_load(game->renderer, game->tile_size,
                                     game->max_bombs, "./rsc/bomb.png");
     if (game->player1 == NULL || game->player1->bag == NULL) {
         game_destroy(game);

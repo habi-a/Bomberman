@@ -52,10 +52,16 @@ void send_notif_join(int socketfd, client_t *clients, client_t *sender, int actu
 void send_all_clients(int socketfd, client_t *clients, client_t *sender, int actual, const char *buffer)
 {
     int i = 1;
+    char index_string[2] = { 0 };
+    char message[BUF_SIZE] = { 0 };
 
+    sprintf(index_string, "%d", sender->index);
+    strncpy(message, index_string, BUF_SIZE - 1);
+    strncat(message, " ", sizeof(message) - strlen(message) - 1);
+    strncat(message, buffer, sizeof(message) - strlen(message) - 1);
     while (i < actual) {
         if (sender != &clients[i])
-            write_client(socketfd, &clients[i].sin, buffer);
+            write_client(socketfd, &clients[i].sin, message);
         i++;
     }
 }

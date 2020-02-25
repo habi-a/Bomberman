@@ -17,7 +17,7 @@
 #include <string.h>
 
 static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e, int id
-                                , int is_connected)
+                            , int is_connected, int socketfd, sockaddr_in_t *sin)
 {
     int result = STATE_CLIENT_SOCKET;
 
@@ -26,15 +26,34 @@ static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e, int id
         result = STATE_CLIENT;
         break;
     case SDLK_UP:
+        if (is_connected) {
+            write_server(socketfd, sin, "up");
+            move(app, game, id - 1, SDLK_UP);
+        }
+        break;
     case SDLK_DOWN:
+        if (is_connected) {
+            write_server(socketfd, sin, "down");
+            move(app, game, id - 1, SDLK_DOWN);
+        }
+        break;
     case SDLK_LEFT:
+        if (is_connected) {
+            write_server(socketfd, sin, "left");
+            move(app, game, id - 1, SDLK_LEFT);
+        }
+        break;
     case SDLK_RIGHT:
-        if (is_connected)
-            move(app, game, id - 1, e->key.keysym.sym);
+        if (is_connected) {
+            write_server(socketfd, sin, "right");
+            move(app, game, id - 1, SDLK_RIGHT);
+        }
         break;
     case SDLK_SPACE:
-        if (is_connected)
+        if (is_connected) {
+            write_server(socketfd, sin, "bomb");
             action(game, id - 1);
+        }
         break;
     default:
         break;
@@ -42,7 +61,8 @@ static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e, int id
     return (result);
 }
 
-static int client_event(app_t *app, game_t *game, int actual_index, int conn)
+static int client_event(app_t *app, game_t *game, int actual_index, int conn
+                        , int socketfd, sockaddr_in_t *sin)
 {
     SDL_Event e;
     int result = STATE_CLIENT_SOCKET;
@@ -51,7 +71,8 @@ static int client_event(app_t *app, game_t *game, int actual_index, int conn)
         if (e.type == SDL_QUIT)
             result = STATE_EXIT;
         else if (e.type == SDL_KEYDOWN) {
-            result = client_event_keyboard(app, game, &e, actual_index, conn);
+            result = client_event_keyboard(app, game, &e, actual_index, conn
+                                            , socketfd, sin);
         }
     }
     return (result);
@@ -84,7 +105,6 @@ static int init_connection(const char *address, int port, sockaddr_in_t *sin)
     sin->sin_addr = *(in_addr_bis_t *)hostinfo->h_addr;
     sin->sin_port = htons(port);
     sin->sin_family = AF_INET;
-    puts("");
     return (socketfd);
 }
 
@@ -107,6 +127,24 @@ void write_server(int socketfd, sockaddr_in_t *sin, const char *buffer)
         perror("sendto()");
         exit(errno);
     }
+}
+
+void client_interpet_message(app_t *app, game_t *game, char buffer[BUF_SIZE])
+{
+    int index = buffer[0] - '0';
+
+    if (!strcmp(buffer + 2, "join"))
+        game->players[index - 1]->is_alive = 1;
+    else if (!strcmp(buffer + 2, "up"))
+        move(app, game, index - 1, SDLK_UP);
+    else if (!strcmp(buffer + 2, "down"))
+        move(app, game, index - 1, SDLK_DOWN);
+    else if (!strcmp(buffer + 2, "left"))
+        move(app, game, index - 1, SDLK_LEFT);
+    else if (!strcmp(buffer + 2, "right"))
+        move(app, game, index - 1, SDLK_RIGHT);
+    else if (!strcmp(buffer + 2, "bomb"))
+        action(game, index - 1);
 }
 
 int client_run(app_t *app)
@@ -148,8 +186,9 @@ int client_run(app_t *app)
                 connected = 1;
             }
             puts(buffer);
+            client_interpet_message(app, game, buffer);
         }
-        state = client_event(app, game, id, connected);
+        state = client_event(app, game, id, connected, socketfd, &sin);
         if (connected)
             game_draw(app, game);
         else
