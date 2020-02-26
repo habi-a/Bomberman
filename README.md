@@ -24,11 +24,16 @@ Ensuite:
 
 #### _Héberger une partie :_
 
-...
+- **Héberger une partie**
+- **Ajout d'un port (par exemple 94200)**
+- **Attendre la connexion des joueurs !**
 
 #### _Rejoindre une partie :_
 
-...
+- **Rejoindre une partie**
+- **Ajout de l'adresse de l'hébergement**
+- **Ajout du port utilisé par l'hébergement !**
+- **Enjoy**
 
 #### _Touches :_
 
