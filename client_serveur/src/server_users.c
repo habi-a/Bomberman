@@ -12,45 +12,62 @@
 #include <stdio.h>
 #include <string.h>
 
-client_t create_client(int *actual_index, sockaddr_in_t csin, client_t clients[MAX_CLIENTS])
+static int genere_id(server_t *server)
+{
+    int used = 0;
+
+    for (int id = 1; id <= MAX_CLIENTS; id++) {
+        used = 0;
+        for (int i = 0; i < server->actual_index; i++) {
+            if (server->clients[i].index == id)
+                used = 1;
+        }
+        if (!used)
+            return (id);
+    }
+    return (0);
+}
+
+client_t create_client(server_t *server, sockaddr_in_t *csin)
 {
     client_t client;
 
-    client.index = *actual_index + 1;
-    client.sin = csin;
-    clients[*actual_index] = client;
-    *actual_index += 1;
+    client.index = genere_id(server);
+    client.sin = *csin;
+    server->clients[server->actual_index] = client;
+    server->actual_index++;
     return (client);
 }
 
-int client_exists(client_t *clients, sockaddr_in_t *csin, int actual)
+int client_exists(server_t *server, sockaddr_in_t *csin)
 {
     int i = 0;
 
-    while (i < actual) {
-        if (clients[i].sin.sin_addr.s_addr == csin->sin_addr.s_addr
-            && clients[i].sin.sin_port == csin->sin_port)
+    while (i < server->actual_index) {
+        if (server->clients[i].sin.sin_addr.s_addr == csin->sin_addr.s_addr
+            && server->clients[i].sin.sin_port == csin->sin_port)
             return (1);
         i++;
     }
     return (0);
 }
 
-client_t *getclient_t(client_t *clients, sockaddr_in_t *csin, int actual)
+client_t *getclient_t(server_t *server, sockaddr_in_t *csin)
 {
     int i = 0;
 
-    while (i < actual) {
-        if (clients[i].sin.sin_addr.s_addr == csin->sin_addr.s_addr
-            && clients[i].sin.sin_port == csin->sin_port)
-            return (&clients[i]);
+    while (i < server->actual_index) {
+        if (server->clients[i].sin.sin_addr.s_addr == csin->sin_addr.s_addr
+            && server->clients[i].sin.sin_port == csin->sin_port)
+            return (&(server->clients[i]));
         i++;
     }
     return (NULL);
 }
 
-void remove_client(client_t *clients, int to_remove, int *actual)
+void remove_client(server_t *server, int to_remove)
 {
-    memmove(clients + to_remove, clients + to_remove + 1, (*actual - to_remove) * sizeof(client_t));
-    *actual = *actual - 1;
+    memmove(server->clients + to_remove, server->clients + to_remove + 1
+            , (server->actual_index - to_remove) * sizeof(client_t));
+    server->actual_index--;
 }

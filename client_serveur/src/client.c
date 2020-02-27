@@ -23,6 +23,8 @@ static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e, int id
 
     switch (e->key.keysym.sym) {
     case SDLK_ESCAPE:
+        if (is_connected)
+            write_server(socketfd, sin, "exit");
         result = STATE_CLIENT;
         break;
     case SDLK_UP:
@@ -68,8 +70,11 @@ static int client_event(app_t *app, game_t *game, int actual_index, int conn
     int result = STATE_CLIENT_SOCKET;
 
     if (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT)
+        if (e.type == SDL_QUIT) {
+            if (conn)
+                write_server(socketfd, sin, "exit");
             result = STATE_EXIT;
+        }
         else if (e.type == SDL_KEYDOWN) {
             result = client_event_keyboard(app, game, &e, actual_index, conn
                                             , socketfd, sin);

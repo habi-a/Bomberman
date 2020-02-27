@@ -32,7 +32,7 @@ game_t *game_create(app_t *app)
 
     if (game == NULL) {
         fprintf(stderr, "Failed to malloc game");
-        exit(EXIT_FAILURE);
+        return (NULL);
     }
     game->max_bombs = 2;
     game->map = map_load(app->renderer, app->tile_size, "./rsc/map.txt");

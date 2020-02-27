@@ -33,7 +33,7 @@ static void write_client(int socketfd, sockaddr_in_t *sin, const char *buffer)
     }
 }
 
-void send_notif_join(int socketfd, client_t *clients, client_t *sender, int actual)
+void send_notif_join(server_t *server, client_t *sender)
 {
     int i = 1;
     char index_string[2] = { 0 };
@@ -42,14 +42,14 @@ void send_notif_join(int socketfd, client_t *clients, client_t *sender, int actu
     sprintf(index_string, "%d", sender->index);
     strncpy(message, index_string, BUF_SIZE - 1);
     strncat(message, " join", sizeof(message) - strlen(message) - 1);
-    while (i < actual) {
-        write_client(socketfd, &clients[i].sin, message);
+    while (i < server->actual_index) {
+        write_client(server->socketfd, &(server->clients[i].sin), message);
         i++;
     }
 }
 
 
-void send_all_clients(int socketfd, client_t *clients, client_t *sender, int actual, const char *buffer)
+void send_all_clients(server_t *server, client_t *sender, const char *buffer)
 {
     int i = 1;
     char index_string[2] = { 0 };
@@ -59,9 +59,9 @@ void send_all_clients(int socketfd, client_t *clients, client_t *sender, int act
     strncpy(message, index_string, BUF_SIZE - 1);
     strncat(message, " ", sizeof(message) - strlen(message) - 1);
     strncat(message, buffer, sizeof(message) - strlen(message) - 1);
-    while (i < actual) {
-        if (sender != &clients[i])
-            write_client(socketfd, &clients[i].sin, message);
+    while (i < server->actual_index) {
+        if (sender != &(server->clients[i]))
+            write_client(server->socketfd, &(server->clients[i].sin), message);
         i++;
     }
 }
