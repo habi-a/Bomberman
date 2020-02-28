@@ -16,45 +16,45 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e, int id
-                            , int is_connected, int socketfd, sockaddr_in_t *sin)
+static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e
+                                , client_helper_t *client)
 {
     int result = STATE_CLIENT_SOCKET;
 
     switch (e->key.keysym.sym) {
     case SDLK_ESCAPE:
-        if (is_connected)
-            write_server(socketfd, sin, "exit");
+        if (client->is_connected)
+            write_server(client->socketfd, &(client->sin), "exit");
         result = STATE_CLIENT;
         break;
     case SDLK_UP:
-        if (is_connected) {
-            write_server(socketfd, sin, "up");
-            move(app, game, id - 1, SDLK_UP);
+        if (client->is_connected) {
+            write_server(client->socketfd, &(client->sin), "up");
+            move(app, game, client->id - 1, SDLK_UP);
         }
         break;
     case SDLK_DOWN:
-        if (is_connected) {
-            write_server(socketfd, sin, "down");
-            move(app, game, id - 1, SDLK_DOWN);
+        if (client->is_connected) {
+            write_server(client->socketfd, &(client->sin), "down");
+            move(app, game, client->id - 1, SDLK_DOWN);
         }
         break;
     case SDLK_LEFT:
-        if (is_connected) {
-            write_server(socketfd, sin, "left");
-            move(app, game, id - 1, SDLK_LEFT);
+        if (client->is_connected) {
+            write_server(client->socketfd, &(client->sin), "left");
+            move(app, game, client->id - 1, SDLK_LEFT);
         }
         break;
     case SDLK_RIGHT:
-        if (is_connected) {
-            write_server(socketfd, sin, "right");
-            move(app, game, id - 1, SDLK_RIGHT);
+        if (client->is_connected) {
+            write_server(client->socketfd, &(client->sin), "right");
+            move(app, game, client->id - 1, SDLK_RIGHT);
         }
         break;
     case SDLK_SPACE:
-        if (is_connected) {
-            write_server(socketfd, sin, "bomb");
-            action(game, id - 1);
+        if (client->is_connected) {
+            write_server(client->socketfd, &(client->sin), "bomb");
+            action(game, client->id - 1);
         }
         break;
     default:
@@ -63,22 +63,19 @@ static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e, int id
     return (result);
 }
 
-static int client_event(app_t *app, game_t *game, int actual_index, int conn
-                        , int socketfd, sockaddr_in_t *sin)
+static int client_event(app_t *app, game_t *game, client_helper_t *client)
 {
     SDL_Event e;
     int result = STATE_CLIENT_SOCKET;
 
     if (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT) {
-            if (conn)
-                write_server(socketfd, sin, "exit");
+            if (client->is_connected)
+                write_server(client->socketfd, &(client->sin), "exit");
             result = STATE_EXIT;
         }
-        else if (e.type == SDL_KEYDOWN) {
-            result = client_event_keyboard(app, game, &e, actual_index, conn
-                                            , socketfd, sin);
-        }
+        else if (e.type == SDL_KEYDOWN)
+            result = client_event_keyboard(app, game, &e, client);
     }
     return (result);
 }
@@ -90,7 +87,6 @@ static void client_waiting_draw(app_t *app, button_t *button)
     button_draw(app, button);
     SDL_RenderPresent(app->renderer);
 }
-
 
 static int init_connection(const char *address, int port, sockaddr_in_t *sin)
 {
@@ -150,58 +146,81 @@ void client_interpet_message(app_t *app, game_t *game, char buffer[BUF_SIZE])
         move(app, game, index - 1, SDLK_RIGHT);
     else if (!strcmp(buffer + 2, "bomb"))
         action(game, index - 1);
+    else if (!strcmp(buffer + 2, "bomb")) {
+        action(game, index - 1);
+        game->players[index - 1]->is_alive = 0;
+    }
+}
+
+static client_helper_t *client_create(app_t *app)
+{
+    client_helper_t *client = malloc(sizeof(client_helper_t));
+    SDL_Rect button_pos1 = { 7.5 * app->tile_size, 10 * app->tile_size
+                            , 10 * app->tile_size, 1.1 * app->tile_size };
+
+    if (client == NULL) {
+        fprintf(stderr, "Failed to malloc server\n");
+        return (NULL);
+    }
+    client->socketfd = init_connection(app->ip, app->port, &(client->sin));
+    client->is_connected = 0;
+    client->max_index = client->socketfd;
+    client->wait_text = button_create(app, "Connexion en cours...", button_pos1);
+    return (client);
+}
+
+static void client_destroy(client_helper_t *client)
+{
+    if (client != NULL) {
+        if (client->wait_text != NULL)
+            button_destroy(client->wait_text);
+        closesocket(client->socketfd);
+        free(client);
+    }
 }
 
 int client_run(app_t *app)
 {
-    int id = 0;
-    int connected = 0;
-    int n;
-    int socketfd;
+    client_helper_t *client = client_create(app);
     int state = STATE_CLIENT_SOCKET;
     char buffer[BUF_SIZE];
     fd_set rdfs;
-    sockaddr_in_t sin;
     game_t *game = game_create(app);
-    SDL_Rect button_pos1 = { 7.5 * app->tile_size, 10 * app->tile_size
-                            , 10 * app->tile_size, 1.1 * app->tile_size };
-    button_t *wait_text = button_create(app, "Connexion en cours...", button_pos1);
     struct timeval waitd = { 0, 0 };
 
-    memset(&sin, 0, sizeof(sin));
-    socketfd = init_connection(app->ip, app->port, &sin);
-    write_server(socketfd, &sin, " ");
+    memset(&(client->sin), 0, sizeof(client->sin));
+    client->socketfd = init_connection(app->ip, app->port, &(client->sin));
+    write_server(client->socketfd, &(client->sin), " ");
     while (state == STATE_CLIENT_SOCKET) {
         FD_ZERO(&rdfs);
         FD_SET(STDIN_FILENO, &rdfs);
-        FD_SET(socketfd, &rdfs);
-        if (select(socketfd + 1, &rdfs, NULL, NULL, &waitd) == -1) {
+        FD_SET(client->socketfd, &rdfs);
+        if (select(client->socketfd + 1, &rdfs, NULL, NULL, &waitd) == -1) {
             perror("select()");
             exit(errno);
         }
-        else if (FD_ISSET(socketfd, &rdfs)) {
-            if ((n = read_server(socketfd, &sin, buffer)) == 0) {
+        else if (FD_ISSET(client->socketfd, &rdfs)) {
+            if ((client->max_index = read_server(client->socketfd, &(client->sin), buffer)) == 0) {
                 printf("\033[0;31mServer disconnected !\033[0m\n");
                 break;
             }
-            if (!connected) {
-                id = buffer[0] - '0';
-                for (int i = 0; i < id; i++)
+            if (!client->is_connected) {
+                client->id = buffer[0] - '0';
+                for (int i = 0; i < client->id; i++)
                     game->players[i]->is_alive = 1;
-                connected = 1;
+                client->is_connected = 1;
             }
             puts(buffer);
             client_interpet_message(app, game, buffer);
         }
-        state = client_event(app, game, id, connected, socketfd, &sin);
-        if (connected)
+        state = client_event(app, game, client);
+        if (client->is_connected)
             game_draw(app, game);
         else
-            client_waiting_draw(app, wait_text);
+            client_waiting_draw(app, client->wait_text);
         SDL_Delay(20);
     }
-    button_destroy(wait_text);
-    closesocket(socketfd);
     game_destroy(game);
+    client_destroy(client);
     return (state);
 }

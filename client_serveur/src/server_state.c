@@ -148,11 +148,9 @@ static void server_state_destroy(server_state_t *server_state)
     if (server_state != NULL) {
         if (server_state->texture != NULL)
             SDL_DestroyTexture(server_state->texture);
-        if (server_state->buttons != NULL) {
-            for (int i = 0; i < 4; i++)
-                if (server_state->buttons[i] != NULL)
-                    button_destroy(server_state->buttons[i]);
-        }
+        for (int i = 0; i < 4; i++)
+            if (server_state->buttons[i] != NULL)
+                button_destroy(server_state->buttons[i]);
         free(server_state);
     }
 }

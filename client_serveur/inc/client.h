@@ -9,6 +9,7 @@
 #define _CLIENT_H_
 
 #include "app.h"
+#include "button.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -26,6 +27,15 @@ typedef   struct sockaddr_in  sockaddr_in_t;
 typedef   struct sockaddr     sockaddr_t;
 typedef   struct in_addr      in_addr_bis_t;
 typedef   struct hostent      hostent_t;
+
+typedef   struct              client_helper_s {
+    int                       id;
+    int                       socketfd;
+    int                       is_connected;
+    int                       max_index;
+    button_t                  *wait_text;
+    sockaddr_in_t             sin;
+}                             client_helper_t;
 
 int      client_run(app_t *app);
 int       read_server(int socketfd, sockaddr_in_t *sin, char *buffer);
