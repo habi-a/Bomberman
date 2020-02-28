@@ -132,11 +132,9 @@ static void menu_destroy(menu_t *menu)
     if (menu != NULL) {
         if (menu->texture != NULL)
             SDL_DestroyTexture(menu->texture);
-        if (menu->buttons != NULL) {
-            for (int i = 0; i < 3; i++)
-                if (menu->buttons[i] != NULL)
-                    button_destroy(menu->buttons[i]);
-        }
+        for (int i = 0; i < 3; i++)
+            if (menu->buttons[i] != NULL)
+                button_destroy(menu->buttons[i]);
         free(menu);
     }
 }
