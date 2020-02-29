@@ -9,7 +9,8 @@
 
 #include <stdio.h>
 
-static player_t *player_init(int x, int y, int tile_size, SDL_Renderer *render)
+static player_t *player_init(int x, int y, int tile_size, int nb_bombs
+                            , SDL_Renderer *render)
 {
     player_t *player = malloc(sizeof(player_t));
 
@@ -22,7 +23,7 @@ static player_t *player_init(int x, int y, int tile_size, SDL_Renderer *render)
     player->position_rect.y = player->coord.y * tile_size;
     player->position_rect.w = tile_size;
     player->position_rect.h = tile_size;
-    player->bag = bag_load(render, tile_size, 2, "./rsc/bomb.png");
+    player->bag = bag_load(render, tile_size, nb_bombs, "./rsc/bomb.png");
     player->texture = NULL;
     if (player->bag == NULL)
         return (NULL);
@@ -30,10 +31,10 @@ static player_t *player_init(int x, int y, int tile_size, SDL_Renderer *render)
 }
 
 player_t *player_load(SDL_Renderer *renderer, int x, int y,
-                        int tile_size, const char *file)
+                        int tile_size, int nb_bombs, const char *file)
 {
     SDL_Surface *surface = NULL;
-    player_t *player = player_init(x, y, tile_size, renderer);
+    player_t *player = player_init(x, y, tile_size, nb_bombs, renderer);
 
     if (player == NULL) {
         fprintf(stderr, "Failed to create player\n");

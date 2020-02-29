@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static app_t *app_init(int screen_w, int screen_h, int tile_size)
+static app_t *app_init()
 {
     app_t *app = malloc(sizeof(app_t));
 
@@ -28,19 +28,28 @@ static app_t *app_init(int screen_w, int screen_h, int tile_size)
         app_destroy(app);
         exit(EXIT_FAILURE);
     }
+    return (app);
+}
+
+static void app_fill_zero(app_t *app, int screenw, int screenh, int tilesize)
+{
+    app->port = 0;
+    app->ip = NULL;
+    app->map_selected = NULL;
+    app->nb_bomb_start = 1;
     app->font = NULL;
     app->renderer = NULL;
     app->window = NULL;
-    app->tile_size = tile_size;
-    app->screen_size.x = screen_w;
-    app->screen_size.y = screen_h;
-    return (app);
+    app->tile_size = tilesize;
+    app->screen_size.x = screenw;
+    app->screen_size.y = screenh;
 }
 
 app_t *app_start(int screen_w, int screen_h, int tile_size)
 {
-    app_t *app = app_init(screen_w, screen_h, tile_size);
+    app_t *app = app_init();
 
+    app_fill_zero(app,screen_w, screen_h, tile_size);
     app->window = SDL_CreateWindow("Bomberman"
         , SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED
         , app->screen_size.x, app->screen_size.y, SDL_WINDOW_SHOWN);
@@ -65,7 +74,6 @@ app_t *app_start(int screen_w, int screen_h, int tile_size)
     return (app);
 }
 
-
 void app_destroy(app_t *app)
 {
     if (app != NULL) {
@@ -80,4 +88,3 @@ void app_destroy(app_t *app)
         free(app);
     }
 }
-

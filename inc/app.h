@@ -12,8 +12,10 @@
 #include <SDL2/SDL_ttf.h>
 
 typedef struct app_s {
+    int nb_bomb_start;
     int port;
     const char *ip;
+    const char *map_selected;
     int tile_size;
     TTF_Font *font;
     SDL_Point screen_size;

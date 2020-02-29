@@ -16,8 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e
-                                , client_helper_t *client)
+static int client_event_keyboard(SDL_Event *e, client_helper_t *client)
 {
     int result = STATE_CLIENT_SOCKET;
 
@@ -28,34 +27,24 @@ static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e
         result = STATE_CLIENT;
         break;
     case SDLK_UP:
-        if (client->is_connected) {
+        if (client->is_connected)
             write_server(client->socketfd, &(client->sin), "up");
-            move(app, game, client->id - 1, SDLK_UP);
-        }
         break;
     case SDLK_DOWN:
-        if (client->is_connected) {
+        if (client->is_connected)
             write_server(client->socketfd, &(client->sin), "down");
-            move(app, game, client->id - 1, SDLK_DOWN);
-        }
         break;
     case SDLK_LEFT:
-        if (client->is_connected) {
+        if (client->is_connected)
             write_server(client->socketfd, &(client->sin), "left");
-            move(app, game, client->id - 1, SDLK_LEFT);
-        }
         break;
     case SDLK_RIGHT:
-        if (client->is_connected) {
+        if (client->is_connected)
             write_server(client->socketfd, &(client->sin), "right");
-            move(app, game, client->id - 1, SDLK_RIGHT);
-        }
         break;
     case SDLK_SPACE:
-        if (client->is_connected) {
+        if (client->is_connected)
             write_server(client->socketfd, &(client->sin), "bomb");
-            action(game, client->id - 1);
-        }
         break;
     default:
         break;
@@ -63,7 +52,7 @@ static int client_event_keyboard(app_t *app, game_t *game, SDL_Event *e
     return (result);
 }
 
-static int client_event(app_t *app, game_t *game, client_helper_t *client)
+static int client_event(client_helper_t *client)
 {
     SDL_Event e;
     int result = STATE_CLIENT_SOCKET;
@@ -75,16 +64,18 @@ static int client_event(app_t *app, game_t *game, client_helper_t *client)
             result = STATE_EXIT;
         }
         else if (e.type == SDL_KEYDOWN)
-            result = client_event_keyboard(app, game, &e, client);
+            result = client_event_keyboard(&e, client);
     }
     return (result);
 }
 
-static void client_waiting_draw(app_t *app, button_t *button)
+static void client_draw(app_t *app, client_helper_t *client)
 {
-    SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
-    SDL_RenderClear(app->renderer);
-    button_draw(app, button);
+    if (!client->is_connected) {
+        SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
+        SDL_RenderClear(app->renderer);
+        button_draw(app, client->wait_text);
+    }
     SDL_RenderPresent(app->renderer);
 }
 
@@ -130,26 +121,17 @@ void write_server(int socketfd, sockaddr_in_t *sin, const char *buffer)
     }
 }
 
-void client_interpet_message(app_t *app, game_t *game, char buffer[BUF_SIZE])
+static void client_interpet_notif(app_t *app, char buffer[BUF_SIZE])
 {
-    int index = buffer[0] - '0';
+    app->nb_bomb_start = 1;
+    app->map_selected = "./rsc/map.txt";
+    printf("notif: %s\n", buffer);
+}
 
-    if (!strcmp(buffer + 2, "join"))
-        game->players[index - 1]->is_alive = 1;
-    else if (!strcmp(buffer + 2, "up"))
-        move(app, game, index - 1, SDLK_UP);
-    else if (!strcmp(buffer + 2, "down"))
-        move(app, game, index - 1, SDLK_DOWN);
-    else if (!strcmp(buffer + 2, "left"))
-        move(app, game, index - 1, SDLK_LEFT);
-    else if (!strcmp(buffer + 2, "right"))
-        move(app, game, index - 1, SDLK_RIGHT);
-    else if (!strcmp(buffer + 2, "bomb"))
-        action(game, index - 1);
-    else if (!strcmp(buffer + 2, "bomb")) {
-        action(game, index - 1);
-        game->players[index - 1]->is_alive = 0;
-    }
+static void client_interpet_message(game_t *game, char buffer[BUF_SIZE])
+{
+    game = game;
+    printf("payload: %s\n", buffer);
 }
 
 static client_helper_t *client_create(app_t *app)
@@ -166,6 +148,7 @@ static client_helper_t *client_create(app_t *app)
     client->is_connected = 0;
     client->max_index = client->socketfd;
     client->wait_text = button_create(app, "Connexion en cours...", button_pos1);
+    client->wait_text->selected = 1;
     return (client);
 }
 
@@ -185,7 +168,7 @@ int client_run(app_t *app)
     int state = STATE_CLIENT_SOCKET;
     char buffer[BUF_SIZE];
     fd_set rdfs;
-    game_t *game = game_create(app);
+    game_t *game = NULL;
     struct timeval waitd = { 0, 0 };
 
     memset(&(client->sin), 0, sizeof(client->sin));
@@ -205,19 +188,17 @@ int client_run(app_t *app)
                 break;
             }
             if (!client->is_connected) {
-                client->id = buffer[0] - '0';
-                for (int i = 0; i < client->id; i++)
-                    game->players[i]->is_alive = 1;
+                client_interpet_notif(app, buffer);
+                game = game_create(app);
                 client->is_connected = 1;
             }
-            puts(buffer);
-            client_interpet_message(app, game, buffer);
+            else
+                client_interpet_message(game, buffer);
         }
-        state = client_event(app, game, client);
+        state = client_event(client);
         if (client->is_connected)
             game_draw(app, game);
-        else
-            client_waiting_draw(app, client->wait_text);
+        client_draw(app, client);
         SDL_Delay(20);
     }
     game_destroy(game);

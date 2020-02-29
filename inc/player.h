@@ -21,7 +21,7 @@ typedef struct player_s {
     SDL_Texture *texture;
 } player_t;
 
-player_t *player_load(SDL_Renderer *, int, int, int, const char *);
+player_t *player_load(SDL_Renderer *, int, int, int, int, const char *);
 void player_draw(player_t *, SDL_Renderer *);
 void player_destroy(player_t *);
 

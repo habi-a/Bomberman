@@ -29,7 +29,6 @@ typedef   struct in_addr      in_addr_bis_t;
 typedef   struct hostent      hostent_t;
 
 typedef   struct              client_helper_s {
-    int                       id;
     int                       socketfd;
     int                       is_connected;
     int                       max_index;

@@ -43,13 +43,15 @@ typedef   struct              server_s {
     sockaddr_in_t             sin;
 }                             server_t;
 
+void      encode_first_info(game_t *game, char *payload);
+void      encode_game(game_t *game, char *payload);
 client_t  create_client(server_t *server, sockaddr_in_t *csin);
 int       read_client(int socketfd, sockaddr_in_t *csin, char *buffer);
 int       client_exists(server_t *server, sockaddr_in_t *csin);
 int       server_run(app_t *app);
-void      send_notif_join(server_t *server, client_t *sender);
-void      send_all_clients(server_t *server,  client_t *sender, const char *buffer);
+void      send_notif_join(server_t *server, client_t *sender, game_t *game);
+void      send_all_clients(server_t *server,  game_t *game);
 void      remove_client(server_t *server, int to_remove);
-client_t *getclient_t(server_t *server, sockaddr_in_t *csin);
+client_t  *getclient_t(server_t *server, sockaddr_in_t *csin);
 
 #endif /* _SERVER_H_ */

@@ -23,6 +23,7 @@ typedef struct game_s {
 
     // Settings
     int max_bombs;
+    const char *map_selected;
 } game_t;
 
 game_t *game_create(app_t *);

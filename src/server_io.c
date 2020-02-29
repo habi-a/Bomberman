@@ -27,41 +27,28 @@ int read_client(int socketfd, sockaddr_in_t *csin, char *buffer)
 
 static void write_client(int socketfd, sockaddr_in_t *sin, const char *buffer)
 {
-    if (sendto(socketfd, buffer, strlen(buffer), 0, (sockaddr_t *)sin, sizeof(*sin)) < 0) {
+    if (sendto(socketfd, buffer, strlen(buffer), 0, (sockaddr_t *)sin
+                                                    , sizeof(*sin)) < 0) {
         perror("sendto()");
         exit(errno);
     }
 }
 
-void send_notif_join(server_t *server, client_t *sender)
+void send_notif_join(server_t *server, client_t *sender, game_t *game)
 {
-    int i = 1;
-    char index_string[2] = { 0 };
     char message[BUF_SIZE] = { 0 };
 
-    sprintf(index_string, "%d", sender->index);
-    strncpy(message, index_string, BUF_SIZE - 1);
-    strncat(message, " join", sizeof(message) - strlen(message) - 1);
-    while (i < server->actual_index) {
-        write_client(server->socketfd, &(server->clients[i].sin), message);
-        i++;
-    }
+    encode_first_info(game, message);
+    write_client(server->socketfd, &(sender->sin), message);
 }
 
 
-void send_all_clients(server_t *server, client_t *sender, const char *buffer)
+void send_all_clients(server_t *server, game_t *game)
 {
-    int i = 1;
-    char index_string[2] = { 0 };
     char message[BUF_SIZE] = { 0 };
 
-    sprintf(index_string, "%d", sender->index);
-    strncpy(message, index_string, BUF_SIZE - 1);
-    strncat(message, " ", sizeof(message) - strlen(message) - 1);
-    strncat(message, buffer, sizeof(message) - strlen(message) - 1);
-    while (i < server->actual_index) {
-        if (sender != &(server->clients[i]))
-            write_client(server->socketfd, &(server->clients[i].sin), message);
-        i++;
+    encode_game(game, message);
+    for (int i = 1; i < server->actual_index; i++) {
+        write_client(server->socketfd, &(server->clients[i].sin), message);
     }
 }
