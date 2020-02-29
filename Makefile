@@ -21,6 +21,7 @@ SRC		=	src/main.c \
 			src/check_move.c \
 			src/client.c \
 			src/client_state.c \
+			src/decode.c \
 			src/encode.c \
 			src/game.c \
 			src/map.c \

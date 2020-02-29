@@ -9,6 +9,7 @@
 #define _CLIENT_H_
 
 #include "app.h"
+#include "game.h"
 #include "button.h"
 
 #include <sys/types.h>
@@ -36,8 +37,9 @@ typedef   struct              client_helper_s {
     sockaddr_in_t             sin;
 }                             client_helper_t;
 
-int      client_run(app_t *app);
+int       client_run(app_t *app);
 int       read_server(int socketfd, sockaddr_in_t *sin, char *buffer);
 void      write_server(int socketfd, sockaddr_in_t *sin, const char *buffer);
+void      decode_game(app_t *app, game_t *game, char *payload);
 
 #endif /* _CLIENT_H_ */

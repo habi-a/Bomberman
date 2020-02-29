@@ -60,9 +60,7 @@ void game_draw(app_t *app, game_t *game)
     SDL_RenderClear(app->renderer);
     if (game != NULL) {
         map_draw(game->map, app->renderer, app->tile_size);
-        for (int i = 0; i < NB_PLAYERS; i++) {
+        for (int i = 0; i < NB_PLAYERS; i++)
             player_draw(game->players[i], app->renderer);
-        }
     }
-    //SDL_RenderPresent(app->renderer);
 }

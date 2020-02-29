@@ -65,6 +65,14 @@ void player_draw(player_t *player, SDL_Renderer *renderer)
     }
 }
 
+void player_update_pos(player_t *player, int tile_size)
+{
+    player->position_rect.x = player->coord.x * tile_size;
+    player->position_rect.y = player->coord.y * tile_size;
+    player->position_rect.w = tile_size;
+    player->position_rect.h = tile_size;
+}
+
 void player_destroy(player_t *player)
 {
     if (player != NULL) {

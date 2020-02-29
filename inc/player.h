@@ -23,6 +23,7 @@ typedef struct player_s {
 
 player_t *player_load(SDL_Renderer *, int, int, int, int, const char *);
 void player_draw(player_t *, SDL_Renderer *);
+void player_update_pos(player_t *player, int tile_size);
 void player_destroy(player_t *);
 
 #endif /* _PLAYER_H_ */

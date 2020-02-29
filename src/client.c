@@ -6,7 +6,6 @@
 */
 
 #include "../inc/action.h"
-#include "../inc/app.h"
 #include "../inc/client.h"
 #include "../inc/move.h"
 #include "../inc/state.h"
@@ -125,13 +124,7 @@ static void client_interpet_notif(app_t *app, char buffer[BUF_SIZE])
 {
     app->nb_bomb_start = 1;
     app->map_selected = "./rsc/map.txt";
-    printf("notif: %s\n", buffer);
-}
-
-static void client_interpet_message(game_t *game, char buffer[BUF_SIZE])
-{
-    game = game;
-    printf("payload: %s\n", buffer);
+    buffer = buffer;
 }
 
 static client_helper_t *client_create(app_t *app)
@@ -193,7 +186,7 @@ int client_run(app_t *app)
                 client->is_connected = 1;
             }
             else
-                client_interpet_message(game, buffer);
+                decode_game(app, game, buffer);
         }
         state = client_event(client);
         if (client->is_connected)
