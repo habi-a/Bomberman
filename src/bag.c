@@ -21,8 +21,8 @@ static bag_t *bag_init()
     return (bag);
 }
 
-static int bag_add(bag_t *bag, SDL_Renderer *renderer, int tilesize
-                    , const char *file)
+int bag_add(bag_t *bag, SDL_Renderer *renderer, int tilesize
+            , const char *file)
 {
     bomb_t *new_node = bomb_load(renderer, tilesize, file);
 

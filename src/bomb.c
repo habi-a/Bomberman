@@ -62,6 +62,14 @@ void bomb_draw(bomb_t *bomb, SDL_Renderer *renderer)
         SDL_RenderCopy(renderer, bomb->texture, NULL, &(bomb->position_rect));
 }
 
+void bomb_update_pos(bomb_t *bomb, int tile_size)
+{
+    bomb->position_rect.x = bomb->coord.x * tile_size;
+    bomb->position_rect.y = bomb->coord.y * tile_size;
+    bomb->position_rect.w = tile_size;
+    bomb->position_rect.h = tile_size;
+}
+
 void bomb_destroy(bomb_t *bomb)
 {
     if (bomb != NULL) {

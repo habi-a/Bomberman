@@ -120,13 +120,6 @@ void write_server(int socketfd, sockaddr_in_t *sin, const char *buffer)
     }
 }
 
-static void client_interpet_notif(app_t *app, char buffer[BUF_SIZE])
-{
-    app->nb_bomb_start = 1;
-    app->map_selected = "./rsc/map.txt";
-    buffer = buffer;
-}
-
 static client_helper_t *client_create(app_t *app)
 {
     client_helper_t *client = malloc(sizeof(client_helper_t));
@@ -174,14 +167,13 @@ int client_run(app_t *app)
         if (select(client->socketfd + 1, &rdfs, NULL, NULL, &waitd) == -1) {
             perror("select()");
             exit(errno);
-        }
-        else if (FD_ISSET(client->socketfd, &rdfs)) {
+        } else if (FD_ISSET(client->socketfd, &rdfs)) {
             if ((client->max_index = read_server(client->socketfd, &(client->sin), buffer)) == 0) {
                 printf("\033[0;31mServer disconnected !\033[0m\n");
                 break;
             }
             if (!client->is_connected) {
-                client_interpet_notif(app, buffer);
+                decode_notif(app, buffer);
                 game = game_create(app);
                 client->is_connected = 1;
             }

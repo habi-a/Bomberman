@@ -84,7 +84,6 @@ void map_draw(map_t *map, SDL_Renderer *renderer, int tilesize)
         block_draw(map->block[i], renderer);
 }
 
-
 void map_destroy(map_t *map)
 {
     if (map != NULL) {

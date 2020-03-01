@@ -41,5 +41,6 @@ int       client_run(app_t *app);
 int       read_server(int socketfd, sockaddr_in_t *sin, char *buffer);
 void      write_server(int socketfd, sockaddr_in_t *sin, const char *buffer);
 void      decode_game(app_t *app, game_t *game, char *payload);
+void      decode_notif(app_t *app, char *payload);
 
 #endif /* _CLIENT_H_ */

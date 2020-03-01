@@ -84,6 +84,7 @@ static int server_state_enter(app_t *app, server_state_t *server_state, char inp
         server_state->index_select++;
         app->port = SDL_atoi(input_text);
         app->map_selected = "./rsc/map.txt";
+        app->nb_bomb_start = 2;
         move_down(server_state);
         return (STATE_SERVER_SOCKET);
     default:
