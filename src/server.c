@@ -82,28 +82,6 @@ static void server_draw(app_t *app, server_t *server)
     SDL_RenderPresent(app->renderer);
 }
 
-static int init_connection(int port, sockaddr_in_t *sin)
-{
-    int socketfd;
-
-    memset(sin, 0, sizeof(*sin));
-    if ((socketfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET) {
-        perror("socket()");
-        exit(errno);
-    }
-    printf("\033[0;32m=> Socket has been created.\033[0m\n");
-    printf("\033[0;33m=> Attempting to start server...\033[0m\n");
-    sin->sin_addr.s_addr = htonl(INADDR_ANY);
-    sin->sin_port = htons(port);
-    sin->sin_family = AF_INET;
-    if (bind(socketfd, (sockaddr_t *) sin, sizeof(*sin)) == SOCKET_ERROR) {
-        perror("bind()");
-        exit(errno);
-    }
-    printf("\033[0;32m=> Server launched and listening on port %d.\033[0m\n", port);
-    return (socketfd);
-}
-
 static void server_interpet_message(app_t *app, game_t *game, char buffer[BUF_SIZE]
                                 , int index, server_t *server)
 {
@@ -136,7 +114,7 @@ static server_t *server_create(app_t *app)
         fprintf(stderr, "Failed to malloc server");
         return (NULL);
     }
-    server->socketfd = init_connection(app->port, &(server->sin));
+    server->socketfd = server_connection(app->port, &(server->sin));
     server->actual_index = 0;
     server->max_index = server->socketfd;
     server->wait_text = button_create(app, "En attente de joueurs...", button_pos1);

@@ -38,6 +38,7 @@ typedef   struct              client_helper_s {
 }                             client_helper_t;
 
 int       client_run(app_t *app);
+int       client_connection(const char *address, int port, sockaddr_in_t *sin);
 int       read_server(int socketfd, sockaddr_in_t *sin, char *buffer);
 void      write_server(int socketfd, sockaddr_in_t *sin, const char *buffer);
 void      decode_game(app_t *app, game_t *game, char *payload);

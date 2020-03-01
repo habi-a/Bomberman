@@ -78,48 +78,6 @@ static void client_draw(app_t *app, client_helper_t *client)
     SDL_RenderPresent(app->renderer);
 }
 
-static int init_connection(const char *address, int port, sockaddr_in_t *sin)
-{
-    hostent_t *hostinfo;
-    int socketfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-    if (socketfd == INVALID_SOCKET) {
-        perror("socket()");
-        exit(errno);
-    }
-    printf("\033[0;32m=> Socket client has been created.\033[0m\n");
-    printf("\033[0;33m=> Attempting to connect to %s...\033[0m\n", address);
-    if ((hostinfo = gethostbyname(address)) == NULL) {
-        fprintf(stderr, "\033[0;31mUnknown host %s.\033[0m\n", address);
-        exit(EXIT_FAILURE);
-    }
-    sin->sin_addr = *(in_addr_bis_t *)hostinfo->h_addr;
-    sin->sin_port = htons(port);
-    sin->sin_family = AF_INET;
-    return (socketfd);
-}
-
-int read_server(int socketfd, sockaddr_in_t *sin, char *buffer)
-{
-    int n = 0;
-    socklen_t sinsize = sizeof(*sin);
-
-    if ((n = recvfrom(socketfd, buffer, BUF_SIZE - 1, 0, (sockaddr_t *)sin, &sinsize)) < 0) {
-        perror("recvfrom()");
-        exit(errno);
-    }
-    buffer[n] = '\0';
-    return (n);
-}
-
-void write_server(int socketfd, sockaddr_in_t *sin, const char *buffer)
-{
-    if (sendto(socketfd, buffer, strlen(buffer), 0, (sockaddr_t *)sin, sizeof(*sin)) < 0) {
-        perror("sendto()");
-        exit(errno);
-    }
-}
-
 static client_helper_t *client_create(app_t *app)
 {
     client_helper_t *client = malloc(sizeof(client_helper_t));
@@ -130,7 +88,7 @@ static client_helper_t *client_create(app_t *app)
         fprintf(stderr, "Failed to malloc server\n");
         return (NULL);
     }
-    client->socketfd = init_connection(app->ip, app->port, &(client->sin));
+    client->socketfd = client_connection(app->ip, app->port, &(client->sin));
     client->is_connected = 0;
     client->max_index = client->socketfd;
     client->wait_text = button_create(app, "Connexion en cours...", button_pos1);
@@ -158,7 +116,7 @@ int client_run(app_t *app)
     struct timeval waitd = { 0, 0 };
 
     memset(&(client->sin), 0, sizeof(client->sin));
-    client->socketfd = init_connection(app->ip, app->port, &(client->sin));
+    client->socketfd = client_connection(app->ip, app->port, &(client->sin));
     write_server(client->socketfd, &(client->sin), " ");
     while (state == STATE_CLIENT_SOCKET) {
         FD_ZERO(&rdfs);

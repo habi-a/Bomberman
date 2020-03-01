@@ -43,6 +43,7 @@ typedef   struct              server_s {
     sockaddr_in_t             sin;
 }                             server_t;
 
+int       server_connection(int port, sockaddr_in_t *sin);
 void      encode_first_info(game_t *game, char *payload);
 void      encode_game(game_t *game, char *payload);
 client_t  create_client(server_t *server, sockaddr_in_t *csin);

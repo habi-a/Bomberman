@@ -20,6 +20,7 @@ SRC		=	src/main.c \
 			src/button.c \
 			src/check_move.c \
 			src/client.c \
+			src/client_connect.c \
 			src/client_state.c \
 			src/decode.c \
 			src/encode.c \
@@ -29,7 +30,7 @@ SRC		=	src/main.c \
 			src/move.c \
 			src/player.c \
 			src/server.c \
-			src/server_io.c \
+			src/server_connect.c \
 			src/server_state.c \
 			src/server_users.c
 

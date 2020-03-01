@@ -12,6 +12,28 @@
 #include <stdlib.h>
 #include <string.h>
 
+int server_connection(int port, sockaddr_in_t *sin)
+{
+    int socketfd;
+
+    memset(sin, 0, sizeof(*sin));
+    if ((socketfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET) {
+        perror("socket()");
+        exit(errno);
+    }
+    printf("\033[0;32m=> Socket has been created.\033[0m\n");
+    printf("\033[0;33m=> Attempting to start server...\033[0m\n");
+    sin->sin_addr.s_addr = htonl(INADDR_ANY);
+    sin->sin_port = htons(port);
+    sin->sin_family = AF_INET;
+    if (bind(socketfd, (sockaddr_t *) sin, sizeof(*sin)) == SOCKET_ERROR) {
+        perror("bind()");
+        exit(errno);
+    }
+    printf("\033[0;32m=> Server launched and listening on port %d.\033[0m\n", port);
+    return (socketfd);
+}
+
 int read_client(int socketfd, sockaddr_in_t *csin, char *buffer)
 {
     int n = 0;
