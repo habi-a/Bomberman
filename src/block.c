@@ -31,13 +31,15 @@ SDL_Texture *load_block_texture(SDL_Renderer *renderer, const char *image)
     return (texture);
 }
 
-block_t *block_load(SDL_Texture *texture, int x, int y, int tile_size)
+block_t *block_load(SDL_Texture *texture, block_type_t block_type
+                    ,int x, int y, int tile_size)
 {
     block_t *block = malloc(sizeof(block_t));
 
     if (block == NULL)
         return (NULL);
     block->is_destroyed = 0;
+    block->block_type = block_type;
     block->coord.x = x;
     block->coord.y = y;
     block->position_rect.x = block->coord.x * tile_size;

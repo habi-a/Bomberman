@@ -7,7 +7,7 @@
 
 #include "../inc/action.h"
 
-int is_bomb_active_here(game_t *game, SDL_Point *coord)
+bomb_t *get_bomb_active_here(game_t *game, SDL_Point *coord)
 {
     bomb_t *bomb = NULL;
 
@@ -16,29 +16,40 @@ int is_bomb_active_here(game_t *game, SDL_Point *coord)
         while (bomb != NULL) {
             if (bomb->is_active
                     && bomb->coord.x == coord->x && bomb->coord.y == coord->y)
-                return (1);
+                return (bomb);
             bomb = bomb->next;
         }
     }
-    return (0);
+    return (NULL);
 }
 
-int is_block_here(game_t *game, SDL_Point *coord)
+block_t *get_block_undestroyed_here(game_t *game, SDL_Point *coord)
 {
     for (int i = 0; i < game->map->nb_block; i++)
         if (!game->map->block[i]->is_destroyed
             && game->map->block[i]->coord.x == coord->x
             && game->map->block[i]->coord.y == coord->y)
-            return (1);
-    return (0);
+            return (game->map->block[i]);
+    return (NULL);
+}
+
+player_t *get_player_alive_here(game_t *game, SDL_Point *coord)
+{
+    for (int i = 0; i < NB_PLAYERS; i++)
+        if (game->players[i]->is_alive
+            && game->players[i]->coord.x == coord->x
+            && game->players[i]->coord.y == coord->y)
+            return (game->players[i]);
+    return (NULL);
 }
 
 static void action_put_bomb(game_t *game, bomb_t *bomb, int index_player)
 {
-    if (!is_bomb_active_here(game, &(game->players[index_player]->coord))) {
+    if (get_bomb_active_here(game, &(game->players[index_player]->coord)) == NULL) {
         bomb->coord = game->players[index_player]->coord;
         bomb->position_rect = game->players[index_player]->position_rect;
         bomb->is_active = 1;
+        bomb->time_activated = SDL_GetTicks();
     }
 }
 

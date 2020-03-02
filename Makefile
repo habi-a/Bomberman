@@ -24,6 +24,7 @@ SRC		=	src/main.c \
 			src/client_state.c \
 			src/decode.c \
 			src/encode.c \
+			src/explosion.c \
 			src/game.c \
 			src/map.c \
 			src/menu_state.c \

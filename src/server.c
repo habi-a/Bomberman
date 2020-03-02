@@ -173,6 +173,8 @@ int server_run(app_t *app)
                 printf("Player %d joined the game\n", tmp_client.index);
             }
         }
+        if (game_update(game))
+            send_all_clients(server, game);
         state = server_event(app, game, server);
         game_draw(app, game);
         server_draw(app, server);

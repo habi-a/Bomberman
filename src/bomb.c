@@ -18,6 +18,7 @@ static bomb_t *bomb_init(int tile_size)
 
     if (bomb == NULL)
         return (NULL);
+    bomb->time_activated = 0;
     bomb->is_active = 0;
     bomb->coord.x = 0;
     bomb->coord.y = 0;

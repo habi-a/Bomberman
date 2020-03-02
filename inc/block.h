@@ -23,7 +23,7 @@ typedef struct block_s {
     SDL_Texture *texture;
 } block_t;
 
-block_t *block_load(SDL_Texture *, int, int, int);
+block_t *block_load(SDL_Texture *, block_type_t block_type, int, int, int);
 void block_draw(block_t *, SDL_Renderer *);
 void block_destroy(block_t *);
 

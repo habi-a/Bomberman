@@ -13,6 +13,7 @@
 typedef struct bomb_s
 {
     int is_active;
+    Uint32 time_activated;
     SDL_Point coord;
     SDL_Rect position_rect;
     SDL_Texture *texture;

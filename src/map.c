@@ -49,9 +49,9 @@ static int map_text_load(map_t *map, FILE *fp, int tile_size, int *i)
     while ((read = getline(&line, &len, fp)) != -1 && k < map->nb_block) {
         for (*i = 0; *i < read && line[*i] != '\n'; *i += 1) {
             if (line[*i] == 'W')
-                map->block[k++] = block_load(map->wall_texture, *i, j, tile_size);
+                map->block[k++] = block_load(map->wall_texture, BLOCK_METAL, *i, j, tile_size);
             else if (line[*i] == 'X')
-                map->block[k++] = block_load(map->block_texture, *i, j, tile_size);
+                map->block[k++] = block_load(map->block_texture, BLOCK_NORMAL, *i, j, tile_size);
         }
         j++;
     }

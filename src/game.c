@@ -5,6 +5,8 @@
 **      Game function file
 */
 
+#include "../inc/action.h"
+#include "../inc/explosion.h"
 #include "../inc/game.h"
 
 #include <stdio.h>
@@ -63,4 +65,24 @@ void game_draw(app_t *app, game_t *game)
         for (int i = 0; i < NB_PLAYERS; i++)
             player_draw(game->players[i], app->renderer);
     }
+}
+
+int game_update(game_t *game)
+{
+    int action_changed = 0;
+    bomb_t *bomb = NULL;
+    player_t *player = NULL;
+    Uint32 time_current = 0;
+
+    for (int i = 0; i < NB_PLAYERS; i++) {
+        player = game->players[i];
+        for (bomb = player->bag->first; bomb != NULL; bomb = bomb->next) {
+            time_current = SDL_GetTicks();
+            if (time_current > 3000 + bomb->time_activated && bomb->is_active) {
+                explose_bomb(game, bomb, player->power);
+                action_changed = 1;
+            }
+        }
+    }
+    return (action_changed);
 }

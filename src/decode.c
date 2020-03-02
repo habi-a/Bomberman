@@ -2,7 +2,7 @@
 ** ETNA PROJECT, 10/02/2020 by habi_a
 ** c:\Users\habiy\Documents\bomberman\client_server
 ** File description:
-**      Encode function file
+**      Decode function file
 */
 
 #include "../inc/client.h"

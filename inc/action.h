@@ -11,7 +11,8 @@
 #include "game.h"
 
 void action(game_t *, int);
-int is_bomb_active_here(game_t *, SDL_Point *);
-int is_block_here(game_t *, SDL_Point *);
+player_t *get_player_alive_here(game_t *, SDL_Point *);
+bomb_t *get_bomb_active_here(game_t *, SDL_Point *);
+block_t *get_block_undestroyed_here(game_t *, SDL_Point *);
 
 #endif /* _ACTION_H_ */

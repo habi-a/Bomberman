@@ -15,6 +15,7 @@
 
 typedef struct player_s {
     int is_alive;
+    int power;
     bag_t *bag;
     SDL_Point coord;
     SDL_Rect position_rect;

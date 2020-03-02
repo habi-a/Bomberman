@@ -17,6 +17,7 @@ static player_t *player_init(int x, int y, int tile_size, int nb_bombs
     if (player == NULL)
         return NULL;
     player->is_alive = 0;
+    player->power = 1;
     player->coord.x = x;
     player->coord.y = y;
     player->position_rect.x = player->coord.x * tile_size;

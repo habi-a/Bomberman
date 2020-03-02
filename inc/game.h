@@ -28,6 +28,7 @@ typedef struct game_s {
 
 game_t *game_create(app_t *);
 void game_draw(app_t *, game_t *);
+int game_update(game_t *game);
 void game_destroy(game_t *);
 
 #endif /* _GAME_H_ */
