@@ -15,13 +15,13 @@
 static int game_create_players(app_t *app, game_t *game)
 {
     game->players[0] = player_load(app->renderer, 1, 1, app->tile_size
-                                    , game->max_bombs, "./rsc/player.png");
+                                    , game->max_bombs, "./rsc/player1.png");
     game->players[1] = player_load(app->renderer, 23, 1, app->tile_size
-                                    , game->max_bombs, "./rsc/player.png");
+                                    , game->max_bombs, "./rsc/player2.png");
     game->players[2] = player_load(app->renderer, 23, 19, app->tile_size
-                                    , game->max_bombs, "./rsc/player.png");
+                                    , game->max_bombs, "./rsc/player3.png");
     game->players[3] = player_load(app->renderer, 1, 19, app->tile_size
-                                    , game->max_bombs, "./rsc/player.png");
+                                    , game->max_bombs, "./rsc/player4.png");
     if (game->players[0] == NULL || game->players[1] == NULL
         || game->players[2] == NULL || game->players[3] == NULL)
         return (0);
