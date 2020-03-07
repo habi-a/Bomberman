@@ -68,7 +68,6 @@ void add_explosion(explosion_list_t *q, SDL_Point *coord, int tilesize
     }
     q->rear->next = temp;
     q->rear = temp;
-    printf("size +1\n");
 }
 
 void stop_explosion(explosion_list_t *q)
