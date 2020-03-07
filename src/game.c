@@ -91,6 +91,21 @@ static int game_update_bomb(app_t *app, game_t *game)
     return (action_changed);
 }
 
+static int game_update_player(game_t *game)
+{
+    int action_changed = 0;
+    player_t *player = NULL;
+
+    for (explosion_t *temp = game->explo_queue->front; temp != NULL
+                                    ; temp = temp->next) {
+        if ((player = get_player_alive_here(game, &(temp->coord))) != NULL) {
+            player->is_alive = 0;
+            action_changed = 1;
+        }
+    }
+    return (action_changed);
+}
+
 static int game_update_explosion(game_t *game)
 {
     int action_changed = 1;
@@ -106,12 +121,13 @@ static int game_update_explosion(game_t *game)
     return (action_changed);
 }
 
-
 int game_update(app_t *app, game_t *game)
 {
     int action_changed = 0;
 
     if (game_update_bomb(app, game))
+        action_changed = 1;
+    if (game_update_player(game))
         action_changed = 1;
     if (game_update_explosion(game))
         action_changed = 1;
