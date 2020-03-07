@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\client_server
+** c:\Users\habiy\Documents\bomberman
 ** File description:
 **      Server function file
 */
@@ -173,7 +173,7 @@ int server_run(app_t *app)
                 printf("Player %d joined the game\n", tmp_client.index);
             }
         }
-        if (game_update(game))
+        if (game_update(app, game))
             send_all_clients(server, game);
         state = server_event(app, game, server);
         game_draw(app, game);

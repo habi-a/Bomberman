@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\sdl
+** c:\Users\habiy\Documents\bomberman
 ** File description:
 **      Game function file
 */
@@ -36,6 +36,7 @@ game_t *game_create(app_t *app)
         fprintf(stderr, "Failed to malloc game\n");
         return (NULL);
     }
+    game->explo_queue = create_list_explosion();
     game->max_bombs = app->nb_bomb_start;
     game->map_selected = app->map_selected;
     game->map = map_load(app->renderer, app->tile_size, app->map_selected);
@@ -52,6 +53,8 @@ void game_destroy(game_t *game)
                 player_destroy(game->players[i]);
         if (game->map != NULL)
             map_destroy(game->map);
+        if (game->explo_queue != NULL)
+            destroy_list_explosion(game->explo_queue);
         free(game);
     }
 }
@@ -64,10 +67,11 @@ void game_draw(app_t *app, game_t *game)
         map_draw(game->map, app->renderer, app->tile_size);
         for (int i = 0; i < NB_PLAYERS; i++)
             player_draw(game->players[i], app->renderer);
+        explosions_draw(game->explo_queue, app->renderer);
     }
 }
 
-int game_update(game_t *game)
+static int game_update_bomb(app_t *app, game_t *game)
 {
     int action_changed = 0;
     bomb_t *bomb = NULL;
@@ -79,10 +83,37 @@ int game_update(game_t *game)
         for (bomb = player->bag->first; bomb != NULL; bomb = bomb->next) {
             time_current = SDL_GetTicks();
             if (time_current > 3000 + bomb->time_activated && bomb->is_active) {
-                explose_bomb(game, bomb, player->power);
+                explose_bomb(app, game, bomb, player->power);
                 action_changed = 1;
             }
         }
     }
+    return (action_changed);
+}
+
+static int game_update_explosion(game_t *game)
+{
+    int action_changed = 1;
+    Uint32 time_current =  SDL_GetTicks();
+
+    for (explosion_t *temp = game->explo_queue->front; action_changed
+            && temp != NULL; temp = game->explo_queue->front) {
+        if (time_current > 1000 + temp->time_explosed)
+            stop_explosion(game->explo_queue);
+        else
+            action_changed = 0;
+    }
+    return (action_changed);
+}
+
+
+int game_update(app_t *app, game_t *game)
+{
+    int action_changed = 0;
+
+    if (game_update_bomb(app, game))
+        action_changed = 1;
+    if (game_update_explosion(game))
+        action_changed = 1;
     return (action_changed);
 }

@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\client_server
+** c:\Users\habiy\Documents\bomberman
 ** File description:
 **      App function file
 */

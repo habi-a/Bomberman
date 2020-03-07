@@ -1,6 +1,6 @@
 /*
 ** ETNA PROJECT, 10/02/2020 by habi_a
-** c:\Users\habiy\Documents\bomberman\client_serveur
+** c:\Users\habiy\Documents\bomberman
 ** File description:
 **      Bag function file
 */
@@ -64,7 +64,7 @@ void bag_draw(bag_t *bag, SDL_Renderer *renderer)
 
 void bag_destroy(bag_t *bag)
 {
-    bomb_t *next;
+    bomb_t *next = NULL;
     bomb_t *current = bag->first;
 
     while (current != NULL) {
