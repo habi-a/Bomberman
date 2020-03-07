@@ -11,7 +11,18 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+typedef enum explo_type_e {
+    EXPLO_CENTER,
+    EXPLO_TOP,
+    EXPLO_DOWN,
+    EXPLO_LEFT,
+    EXPLO_RIGHT,
+    EXPLO_VERT,
+    EXPLO_HORI
+} explo_type_t;
+
 typedef struct explosion_s {
+    explo_type_t explo_type;
     Uint32 time_explosed;
     SDL_Point coord;
     SDL_Rect position_rect;
@@ -26,8 +37,8 @@ typedef struct explosion_list_s {
 } explosion_list_t;
 
 explosion_list_t *create_list_explosion();
-void add_explosion(explosion_list_t *, SDL_Point *, int, const char *
-                                                    , SDL_Renderer *);
+void add_explosion(explosion_list_t *, SDL_Point *, int, explo_type_t
+                    , const char *, SDL_Renderer *);
 void stop_explosion(explosion_list_t *);
 void destroy_list_explosion(explosion_list_t *);
 

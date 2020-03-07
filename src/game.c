@@ -108,15 +108,18 @@ static int game_update_player(game_t *game)
 
 static int game_update_explosion(game_t *game)
 {
-    int action_changed = 1;
+    int action_changed = 0;
+    int explose = 1;
     Uint32 time_current =  SDL_GetTicks();
 
-    for (explosion_t *temp = game->explo_queue->front; action_changed
+    for (explosion_t *temp = game->explo_queue->front; explose
             && temp != NULL; temp = game->explo_queue->front) {
-        if (time_current > 1000 + temp->time_explosed)
+        if (time_current > 1000 + temp->time_explosed) {
             stop_explosion(game->explo_queue);
+            action_changed = 1;
+        }
         else
-            action_changed = 0;
+            explose = 0;
     }
     return (action_changed);
 }

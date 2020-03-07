@@ -87,17 +87,99 @@ static void decode_player(app_t *app, game_t *game, int index_player
     decode_bag(app, game, index_player, payload, &j);
 }
 
+static void decode_explosion_create(app_t *app, game_t *game, SDL_Point *coord
+                                    , explo_type_t explo_type)
+{
+    switch (explo_type) {
+    default:
+    case EXPLO_CENTER:
+        add_explosion(game->explo_queue, coord, app->tile_size, explo_type
+                            , "./rsc/explosion_center.png", app->renderer);
+        break;
+    case EXPLO_TOP:
+        add_explosion(game->explo_queue, coord, app->tile_size, explo_type
+                            , "./rsc/explosion_top.png", app->renderer);
+        break;
+    case EXPLO_DOWN:
+        add_explosion(game->explo_queue, coord, app->tile_size, explo_type
+                            , "./rsc/explosion_down.png", app->renderer);
+        break;
+    case EXPLO_LEFT:
+        add_explosion(game->explo_queue, coord, app->tile_size, explo_type
+                            , "./rsc/explosion_left.png", app->renderer);
+        break;
+    case EXPLO_RIGHT:
+        add_explosion(game->explo_queue, coord, app->tile_size, explo_type
+                            , "./rsc/explosion_right.png", app->renderer);
+        break;
+    case EXPLO_VERT:
+        add_explosion(game->explo_queue, coord, app->tile_size, explo_type
+                            , "./rsc/explosion_vert.png", app->renderer);
+        break;
+    case EXPLO_HORI:
+        add_explosion(game->explo_queue, coord, app->tile_size, explo_type
+                            , "./rsc/explosion_hori.png", app->renderer);
+        break;
+    }
+}
+
+static void decode_explosion(app_t *app, game_t *game, int *j
+                            , char *payload)
+{
+    SDL_Point coord = { 0, 0 };
+    explo_type_t explo_type = EXPLO_CENTER;
+    char tmp_x[4] = { 0 };
+    char tmp_y[4] = { 0 };
+
+    explo_type = payload[*j] - '0';
+    *j += 2;
+    for (int k = 0; payload[*j] != ','; k++) {
+        tmp_x[k] = payload[*j];
+        *j += 1;
+    }
+    *j += 1;
+    coord.x = atoi(tmp_x);
+    for (int k = 0; payload[*j] != ',' && payload[*j] != 0; k++) {
+        tmp_y[k] = payload[*j];
+        *j += 1;
+    }
+    *j += 1;
+    coord.y = atoi(tmp_y);
+    decode_explosion_create(app, game, &coord, explo_type);
+}
+
+static void decode_explosions(app_t *app, game_t *game, char *payload)
+{
+    int j = 0;
+    int nb_explo = 0;
+    char nb_explo_str[4] = { 0 };
+
+    for (int k = 0; payload[j] != ',' && payload[j] != 0; k++) {
+        nb_explo_str[k] = payload[j];
+        j++;
+    }
+    j++;
+    nb_explo = atoi(nb_explo_str);
+    for (int i = 0; game->explo_queue->size; i++)
+        stop_explosion(game->explo_queue);
+    for (int i = 0; i < nb_explo; i++)
+        decode_explosion(app, game, &j, payload);
+}
+
 void decode_game(app_t *app, game_t *game, char *payload)
 {
     int j = 0;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         char tmp_payload[64] = { 0 };
 
         for (int k = 0; payload[j] != '\n'; k++) {
             tmp_payload[k] = payload[j];
             j++;
         }
-        decode_player(app, game, i, tmp_payload);
+        if (i < 4)
+            decode_player(app, game, i, tmp_payload);
+        else
+            decode_explosions(app, game, tmp_payload);
         j++;
     }
     decode_map(game, payload + j);

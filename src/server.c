@@ -160,7 +160,7 @@ int server_run(app_t *app)
             if (client_exists(server, &csin)) {
                 client_t *client = getclient_t(server, &csin);
                 if (client != NULL) {
-                    printf("%d %s\n", client->index, buffer);
+                    printf("player%d: '%s'\n", client->index, buffer);
                     server_interpet_message(app, game, buffer, client->index
                                             , server);
                     send_all_clients(server, game);

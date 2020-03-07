@@ -46,12 +46,31 @@ static void encode_player(game_t *game, int index_player, char *payload)
     encode_bomb(player_selected->bag, payload);
 }
 
+static void encode_explosions(game_t *game, char *payload)
+{
+    char tmp_payload_size[4] = { 0 };
+    explosion_t *exp = game->explo_queue->front;
+
+    sprintf(tmp_payload_size, "%d", game->explo_queue->size);
+    strcat(payload, tmp_payload_size);
+    for (int i = 0; i < game->explo_queue->size && exp != NULL; i++) {
+        char tmp_payload[16] = { 0 };
+
+        sprintf(tmp_payload, ",%d,%d,%d"
+                , exp->explo_type, exp->coord.x, exp->coord.y);
+        strcat(payload, tmp_payload);
+        exp = exp->next;
+    }
+}
+
 void encode_game(game_t *game, char *payload)
 {
     for (int i = 0; i < 4; i++) {
         encode_player(game, i, payload);
         strncat(payload, "\n", sizeof(payload) - strlen(payload) - 1);
     }
+    encode_explosions(game, payload);
+    strncat(payload, "\n", sizeof(payload) - strlen(payload) - 1);
     encode_map(game, payload);
 }
 

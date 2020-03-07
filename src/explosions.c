@@ -47,7 +47,8 @@ static explosion_t *new_node(const char *file, SDL_Renderer *renderer)
 }
 
 void add_explosion(explosion_list_t *q, SDL_Point *coord, int tilesize
-                    , const char *f, SDL_Renderer *renderer)
+                    , explo_type_t explo_type, const char *f
+                    , SDL_Renderer *renderer)
 {
     explosion_t *temp = new_node(f, renderer);
 
@@ -56,6 +57,7 @@ void add_explosion(explosion_list_t *q, SDL_Point *coord, int tilesize
     temp->next = NULL;
     temp->coord.x = coord->x;
     temp->coord.y = coord->y;
+    temp->explo_type = explo_type;
     temp->position_rect.x = temp->coord.x * tilesize;
     temp->position_rect.y = temp->coord.y * tilesize;
     temp->position_rect.w = tilesize;
@@ -81,6 +83,8 @@ void stop_explosion(explosion_list_t *q)
     if (q->front == NULL)
         q->rear = NULL;
     q->size--;
+    if (temp->texture != NULL)
+        SDL_DestroyTexture(temp->texture);
     free(temp);
 }
 

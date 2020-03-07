@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <netdb.h>
 
-#define  BUF_SIZE            1024
+#define  BUF_SIZE            2048
 #define  MAX_CLIENTS 	      4
 #define  INVALID_SOCKET      -1
 #define  SOCKET_ERROR        -1
