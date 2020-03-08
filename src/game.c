@@ -36,6 +36,7 @@ game_t *game_create(app_t *app)
         fprintf(stderr, "Failed to malloc game\n");
         return (NULL);
     }
+    game->time_left = app->time_left;
     game->explo_queue = create_list_explosion();
     game->max_bombs = app->nb_bomb_start;
     game->map_selected = app->map_selected;

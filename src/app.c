@@ -33,6 +33,7 @@ static app_t *app_init()
 
 static void app_fill_zero(app_t *app, int screenw, int screenh, int tilesize)
 {
+    app->time_left = 0;
     app->port = 0;
     app->ip = NULL;
     app->map_selected = NULL;

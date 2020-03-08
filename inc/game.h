@@ -24,7 +24,9 @@ typedef struct game_s {
     explosion_list_t *explo_queue;
 
     // Settings
+    int is_bonus;
     int max_bombs;
+    Uint32 time_left;
     const char *map_selected;
 } game_t;
 

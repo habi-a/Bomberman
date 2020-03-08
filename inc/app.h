@@ -12,6 +12,7 @@
 #include <SDL2/SDL_ttf.h>
 
 typedef struct app_s {
+    Uint32 time_left;
     int nb_bomb_start;
     int port;
     const char *ip;

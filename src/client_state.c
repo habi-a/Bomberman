@@ -100,7 +100,8 @@ static int client_state_enter(app_t *app, client_state_t *client_state, char inp
     return (STATE_CLIENT);
 }
 
-static int client_state_event(app_t *app, client_state_t *client_state, char input_text[17], int *len, int max)
+static int client_state_event(app_t *app, client_state_t *client_state
+                                , char input_text[17], int *len, int max)
 {
     int change_made = 0;
     int exit_code = STATE_CLIENT;
