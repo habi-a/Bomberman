@@ -74,7 +74,7 @@ void encode_game(game_t *game, char *payload)
     encode_map(game, payload);
 }
 
-void encode_first_info(game_t *game, char *payload)
+void encode_first_info(app_t *app, char *payload)
 {
-    sprintf(payload, "%d %s", game->max_bombs, game->map_selected);
+    sprintf(payload, "%d %d", app->nb_bomb_start, app->index_map);
 }

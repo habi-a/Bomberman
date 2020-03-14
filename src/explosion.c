@@ -45,10 +45,10 @@ static int explose_bomb_top(app_t *app, game_t *game, bomb_t *bomb, int range
     if (is_drawable) {
         if (range == max)
             add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_TOP
-                        , "./rsc/explosion_top.png", app->renderer);
+                        , "./rsc/sprites/bomb/explosion/top.png", app->renderer);
         else
             add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_VERT
-                    , "./rsc/explosion_vert.png", app->renderer);
+                    , "./rsc/sprites/bomb/explosion/vert.png", app->renderer);
     }
     return (stop);
 }
@@ -74,10 +74,10 @@ static int explose_bomb_bottom(app_t *app, game_t *game, bomb_t *bomb, int range
     if (is_drawable) {
         if (range == max)
             add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_DOWN
-                        , "./rsc/explosion_down.png", app->renderer);
+                        , "./rsc/sprites/bomb/explosion/down.png", app->renderer);
         else
             add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_VERT
-                    , "./rsc/explosion_vert.png", app->renderer);
+                    , "./rsc/sprites/bomb/explosion/vert.png", app->renderer);
     }
     return (stop);
 }
@@ -103,10 +103,10 @@ static int explose_bomb_left(app_t *app, game_t *game, bomb_t *bomb, int range
     if (is_drawable) {
         if (range == max)
             add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_LEFT
-                        , "./rsc/explosion_left.png", app->renderer);
+                        , "./rsc/sprites/bomb/explosion/left.png", app->renderer);
         else
             add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_HORI
-                    , "./rsc/explosion_hori.png", app->renderer);
+                    , "./rsc/sprites/bomb/explosion/hori.png", app->renderer);
     }
     return (stop);
 }
@@ -132,10 +132,10 @@ static int explose_bomb_right(app_t *app, game_t *game, bomb_t *bomb, int range
     if (is_drawable) {
         if (range == max)
             add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_RIGHT
-                        , "./rsc/explosion_right.png", app->renderer);
+                        , "./rsc/sprites/bomb/explosion/right.png", app->renderer);
         else
             add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_HORI
-                    , "./rsc/explosion_hori.png", app->renderer);
+                    , "./rsc/sprites/bomb/explosion/hori.png", app->renderer);
     }
     return (stop);
 }
@@ -146,7 +146,7 @@ static int explose_bomb_center(app_t *app, game_t *game, bomb_t *bomb)
     SDL_Point coord = { bomb->coord.x, bomb->coord.y };
 
     add_explosion(game->explo_queue, &coord, app->tile_size, EXPLO_CENTER
-                    , "./rsc/explosion_center.png", app->renderer);
+                    , "./rsc/sprites/bomb/explosion/center.png", app->renderer);
     if ((player = get_player_alive_here(game, &coord)) != NULL) {
         player->is_alive = 0;
     }

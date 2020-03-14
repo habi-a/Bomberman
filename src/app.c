@@ -31,12 +31,14 @@ static app_t *app_init()
     return (app);
 }
 
-static void app_fill_zero(app_t *app, int screenw, int screenh, int tilesize)
+static void app_fill(app_t *app, int screenw, int screenh, int tilesize)
 {
     app->time_left = 0;
     app->port = 0;
     app->ip = NULL;
-    app->map_selected = NULL;
+    app->index_map = 1;
+    app->maps_available[0] = "./rsc/maps/map1.txt";
+    app->maps_available[1] = "./rsc/maps/map2.txt";
     app->nb_bomb_start = 1;
     app->font = NULL;
     app->renderer = NULL;
@@ -50,7 +52,7 @@ app_t *app_start(int screen_w, int screen_h, int tile_size)
 {
     app_t *app = app_init();
 
-    app_fill_zero(app,screen_w, screen_h, tile_size);
+    app_fill(app,screen_w, screen_h, tile_size);
     app->window = SDL_CreateWindow("Bomberman"
         , SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED
         , app->screen_size.x, app->screen_size.y, SDL_WINDOW_SHOWN);
@@ -66,7 +68,7 @@ app_t *app_start(int screen_w, int screen_h, int tile_size)
         app_destroy(app);
         exit(EXIT_FAILURE);
     }
-    app->font = TTF_OpenFont("./rsc/bomberman.ttf", 24);
+    app->font = TTF_OpenFont("./rsc/fonts/bomberman.ttf", 24);
     if (app->font == NULL) {
         fprintf(stderr, "Failed to load ttf: %s\n", TTF_GetError());
         app_destroy(app);

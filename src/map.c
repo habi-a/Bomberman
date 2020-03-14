@@ -31,9 +31,12 @@ static map_t *map_init(SDL_Renderer *renderer)
     map->i_max = 0;
     map->j_max = 0;
     map->nb_block = 0;
-    map->block_texture = load_block_texture(renderer, "./rsc/block.png");
-    map->wall_texture = load_block_texture(renderer, "./rsc/wall.png");
-    map->floor_texture = load_block_texture(renderer, "./rsc/floor.png");
+    map->block_texture = load_block_texture(renderer
+                                            , "./rsc/sprites/block/block.png");
+    map->wall_texture = load_block_texture(renderer
+                                            , "./rsc/sprites/block/wall.png");
+    map->floor_texture = load_block_texture(renderer
+                                            , "./rsc/sprites/block/floor.png");
     map->block = NULL;
     return (map);
 }

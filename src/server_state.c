@@ -18,7 +18,7 @@ static SDL_Texture *server_state_background(app_t *app)
     SDL_Texture *texture = NULL;
     SDL_Surface *surface = NULL;
 
-    surface = IMG_Load("./rsc/gate.png");
+    surface = IMG_Load("./rsc/backgrounds/gate.png");
     if (surface == NULL) {
         fprintf(stderr, "Failed to load image: %s\n", SDL_GetError());
         return (NULL);
@@ -33,17 +33,34 @@ static SDL_Texture *server_state_background(app_t *app)
 
 }
 
+static void server_state_buttons(app_t *app, server_state_t *server_state)
+{
+    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 8 * app->tile_size, 6 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 9 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos3 = { 1.5 * app->tile_size, 10.5 * app->tile_size, 8.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos4 = { 1.5 * app->tile_size, 11.5 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos5 = { 1.5 * app->tile_size, 13 * app->tile_size, 10.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos6 = { 1.5 * app->tile_size, 14 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos7 = { 1.5 * app->tile_size, 15.5 * app->tile_size, 2.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos8 = { 1.5 * app->tile_size, 16.5 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos9 = { 1.5 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
+    SDL_Rect button_pos10 = { 9.25 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
+
+    server_state->buttons[0] = button_create(app, "Index de la map:", button_pos1);
+    server_state->buttons[1] = button_create(app, " ", button_pos2);
+    server_state->buttons[2] = button_create(app, "Temps max en minutes:", button_pos3);
+    server_state->buttons[3] = button_create(app, " ", button_pos4);
+    server_state->buttons[4] = button_create(app, "Nombre de bombe au demarrage:", button_pos5);
+    server_state->buttons[5] = button_create(app, " ", button_pos6);
+    server_state->buttons[6] = button_create(app, "Port:", button_pos7);
+    server_state->buttons[7] = button_create(app, " ", button_pos8);
+    server_state->buttons[8] = button_create(app, "Echap: Retour", button_pos9);
+    server_state->buttons[9] = button_create(app, "Entree: Suivant", button_pos10);
+}
+
 static server_state_t *server_state_create(app_t *app)
 {
     server_state_t *server_state = malloc(sizeof(server_state_t));
-    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 10 * app->tile_size, 10 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 11 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos3 = { 1.5 * app->tile_size, 12 * app->tile_size, 9 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos4 = { 1.5 * app->tile_size, 13 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos5 = { 1.5 * app->tile_size, 14 * app->tile_size, 2.5 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos6 = { 1.5 * app->tile_size, 15 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos7 = { 1.5 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
-    SDL_Rect button_pos8 = { 9.25 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
 
     if (server_state == NULL) {
         fprintf(stderr, "Failed to malloc server_state\n");
@@ -52,14 +69,7 @@ static server_state_t *server_state_create(app_t *app)
     server_state->texture = server_state_background(app);
     if (server_state->texture == NULL)
         return(NULL);
-    server_state->buttons[0] = button_create(app, "Nombre de bombe au demarrage:", button_pos1);
-    server_state->buttons[1] = button_create(app, " ", button_pos2);
-    server_state->buttons[2] = button_create(app, "Temps maximum: (en minutes)", button_pos3);
-    server_state->buttons[3] = button_create(app, " ", button_pos4);
-    server_state->buttons[4] = button_create(app, "Port:", button_pos5);
-    server_state->buttons[5] = button_create(app, " ", button_pos6);
-    server_state->buttons[6] = button_create(app, "Echap: Retour", button_pos7);
-    server_state->buttons[7] = button_create(app, "Entree: Suivant", button_pos8);
+    server_state_buttons(app, server_state);
     server_state->index_select = 0;
     server_state->buttons[server_state->index_select]->selected = 1;
     return (server_state);
@@ -72,7 +82,7 @@ static void server_state_draw(app_t *app, server_state_t *server_state)
     SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
     SDL_RenderClear(app->renderer);
     SDL_RenderCopy(app->renderer, server_state->texture, NULL, &full_screen);
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 10; i++)
         button_draw(app, server_state->buttons[i]);
     SDL_RenderPresent(app->renderer);
 }
@@ -89,9 +99,11 @@ static int server_state_enter(app_t *app, server_state_t *server_state
 {
     switch (server_state->index_select) {
     case 0:
-        app->nb_bomb_start = SDL_atoi(input_text);
-        move_down(server_state);
-        *len = 0;
+        app->index_map = SDL_atoi(input_text);
+        if (app->index_map && app->index_map <= NB_MAP) {
+            move_down(server_state);
+            *len = 0;
+        }
         break;
     case 2:
         app->time_left = SDL_atoi(input_text);
@@ -99,8 +111,14 @@ static int server_state_enter(app_t *app, server_state_t *server_state
         *len = 0;
         break;
     case 4:
+        app->nb_bomb_start = SDL_atoi(input_text);
+        if (app->nb_bomb_start) {
+            move_down(server_state);
+            *len = 0;
+        }
+        break;
+    case 6:
         app->port = SDL_atoi(input_text);
-        app->map_selected = "./rsc/map.txt";
         move_down(server_state);
         return (STATE_SERVER_SOCKET);
     }
@@ -166,7 +184,7 @@ static void server_state_destroy(server_state_t *server_state)
     if (server_state != NULL) {
         if (server_state->texture != NULL)
             SDL_DestroyTexture(server_state->texture);
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 10; i++)
             if (server_state->buttons[i] != NULL)
                 button_destroy(server_state->buttons[i]);
         free(server_state);
@@ -178,6 +196,7 @@ int server_state_run(app_t *app)
     int len = 0;
     int exit_code = STATE_SERVER;
     char port[8] = { 0 };
+    char id_map[8] = { 0 };
     char nb_bombs[8] = { 0 };
     char time_left[8] = { 0 };
     server_state_t *server_state = server_state_create(app);
@@ -188,10 +207,12 @@ int server_state_run(app_t *app)
     while (exit_code == STATE_SERVER) {
         server_state_draw(app, server_state);
         if (!server_state->index_select)
-            exit_code = server_state_event(app, server_state, nb_bombs, &len, 2);
+            exit_code = server_state_event(app, server_state, id_map, &len, 1);
         else if (server_state->index_select == 2)
-            exit_code = server_state_event(app, server_state, time_left, &len, 3);
+            exit_code = server_state_event(app, server_state, time_left, &len, 4);
         else if (server_state->index_select == 4)
+            exit_code = server_state_event(app, server_state, nb_bombs, &len, 1);
+        else if (server_state->index_select == 6)
             exit_code = server_state_event(app, server_state, port, &len, 5);
         SDL_Delay(20);
     }

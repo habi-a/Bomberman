@@ -15,13 +15,13 @@
 static int game_create_players(app_t *app, game_t *game)
 {
     game->players[0] = player_load(app->renderer, 1, 1, app->tile_size
-                                    , game->max_bombs, "./rsc/player1.png");
+                , game->max_bombs, "./rsc/sprites/player/player1/front.png");
     game->players[1] = player_load(app->renderer, 23, 1, app->tile_size
-                                    , game->max_bombs, "./rsc/player2.png");
+                , game->max_bombs, "./rsc/sprites/player/player2/front.png");
     game->players[2] = player_load(app->renderer, 23, 19, app->tile_size
-                                    , game->max_bombs, "./rsc/player3.png");
+                , game->max_bombs, "./rsc/sprites/player/player3/front.png");
     game->players[3] = player_load(app->renderer, 1, 19, app->tile_size
-                                    , game->max_bombs, "./rsc/player4.png");
+                , game->max_bombs, "./rsc/sprites/player/player4/front.png");
     if (game->players[0] == NULL || game->players[1] == NULL
         || game->players[2] == NULL || game->players[3] == NULL)
         return (0);
@@ -39,8 +39,8 @@ game_t *game_create(app_t *app)
     game->time_left = app->time_left;
     game->explo_queue = create_list_explosion();
     game->max_bombs = app->nb_bomb_start;
-    game->map_selected = app->map_selected;
-    game->map = map_load(app->renderer, app->tile_size, app->map_selected);
+    game->map_selected = app->maps_available[app->index_map - 1];
+    game->map = map_load(app->renderer, app->tile_size, game->map_selected);
     if (!game_create_players(app, game) || game->map == NULL)
         return (NULL);
     return (game);

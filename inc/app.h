@@ -11,12 +11,15 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#define NB_MAP 2
+
 typedef struct app_s {
     Uint32 time_left;
     int nb_bomb_start;
     int port;
+    int index_map;
     const char *ip;
-    const char *map_selected;
+    const char *maps_available[NB_MAP];
     int tile_size;
     TTF_Font *font;
     SDL_Point screen_size;

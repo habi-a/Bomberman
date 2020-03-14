@@ -56,11 +56,11 @@ static void write_client(int socketfd, sockaddr_in_t *sin, const char *buffer)
     }
 }
 
-void send_notif_join(server_t *server, client_t *sender, game_t *game)
+void send_notif_join(server_t *server, client_t *sender, app_t *app)
 {
     char message[BUF_SIZE] = { 0 };
 
-    encode_first_info(game, message);
+    encode_first_info(app, message);
     write_client(server->socketfd, &(sender->sin), message);
 }
 

@@ -17,7 +17,7 @@
 typedef struct server_state_s {
     int index_select;
     SDL_Texture *texture;
-    button_t *buttons[8];
+    button_t *buttons[10];
 } server_state_t;
 
 int server_state_run(app_t *);

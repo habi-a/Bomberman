@@ -53,7 +53,7 @@ static void decode_bag(app_t *app, game_t *game, int indexplayer, char *payload
     nb_bombs = atoi(nb_bombs_str);
     for (int i = game->players[indexplayer]->bag->size; i < nb_bombs; i++) {
         if (!bag_add(game->players[indexplayer]->bag, app->renderer
-            , app->tile_size, "./rsc/bomb.png"))
+            , app->tile_size, "./rsc/sprites/bomb/bomb.png"))
             return;
     }
     bomb = game->players[indexplayer]->bag->first;
@@ -94,31 +94,31 @@ static void decode_explosion_create(app_t *app, game_t *game, SDL_Point *coord
     default:
     case EXPLO_CENTER:
         add_explosion(game->explo_queue, coord, app->tile_size, explo_type
-                            , "./rsc/explosion_center.png", app->renderer);
+                            , "./rsc/sprites/bomb/explosion/center.png", app->renderer);
         break;
     case EXPLO_TOP:
         add_explosion(game->explo_queue, coord, app->tile_size, explo_type
-                            , "./rsc/explosion_top.png", app->renderer);
+                            , "./rsc/sprites/bomb/explosion/top.png", app->renderer);
         break;
     case EXPLO_DOWN:
         add_explosion(game->explo_queue, coord, app->tile_size, explo_type
-                            , "./rsc/explosion_down.png", app->renderer);
+                            , "./rsc/sprites/bomb/explosion/down.png", app->renderer);
         break;
     case EXPLO_LEFT:
         add_explosion(game->explo_queue, coord, app->tile_size, explo_type
-                            , "./rsc/explosion_left.png", app->renderer);
+                            , "./rsc/sprites/bomb/explosion/left.png", app->renderer);
         break;
     case EXPLO_RIGHT:
         add_explosion(game->explo_queue, coord, app->tile_size, explo_type
-                            , "./rsc/explosion_right.png", app->renderer);
+                            , "./rsc/sprites/bomb/explosion/right.png", app->renderer);
         break;
     case EXPLO_VERT:
         add_explosion(game->explo_queue, coord, app->tile_size, explo_type
-                            , "./rsc/explosion_vert.png", app->renderer);
+                            , "./rsc/sprites/bomb/explosion/vert.png", app->renderer);
         break;
     case EXPLO_HORI:
         add_explosion(game->explo_queue, coord, app->tile_size, explo_type
-                            , "./rsc/explosion_hori.png", app->renderer);
+                            , "./rsc/sprites/bomb/explosion/hori.png", app->renderer);
         break;
     }
 }
@@ -196,6 +196,6 @@ void decode_notif(app_t *app, char *payload)
     }
     app->nb_bomb_start = atoi(tmp_bombs);
     j++;
-    app->map_selected = payload + j;
+    app->index_map = atoi(payload + j);
     j++;
 }

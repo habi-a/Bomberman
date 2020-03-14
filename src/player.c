@@ -24,7 +24,8 @@ static player_t *player_init(int x, int y, int tile_size, int nb_bombs
     player->position_rect.y = player->coord.y * tile_size;
     player->position_rect.w = tile_size;
     player->position_rect.h = tile_size;
-    player->bag = bag_load(render, tile_size, nb_bombs, "./rsc/bomb.png");
+    player->bag = bag_load(render, tile_size, nb_bombs
+                                            , "./rsc/sprites/bomb/bomb.png");
     player->texture = NULL;
     if (player->bag == NULL)
         return (NULL);

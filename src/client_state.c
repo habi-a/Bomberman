@@ -18,7 +18,7 @@ static SDL_Texture *client_state_background(app_t *app)
     SDL_Texture *texture = NULL;
     SDL_Surface *surface = NULL;
 
-    surface = IMG_Load("./rsc/gate.png");
+    surface = IMG_Load("./rsc/backgrounds/gate.png");
     if (surface == NULL) {
         fprintf(stderr, "Failed to load image: %s\n", SDL_GetError());
         return (NULL);

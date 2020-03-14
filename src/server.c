@@ -168,7 +168,7 @@ int server_run(app_t *app)
             } else if (server->actual_index != MAX_CLIENTS) {
                 client_t tmp_client = create_client(server, &csin);
                 game->players[tmp_client.index - 1]->is_alive = 1;
-                send_notif_join(server, &tmp_client, game);
+                send_notif_join(server, &tmp_client, app);
                 send_all_clients(server, game);
                 printf("Player %d joined the game\n", tmp_client.index);
             }
