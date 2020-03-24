@@ -36,6 +36,7 @@ game_t *game_create(app_t *app)
         fprintf(stderr, "Failed to malloc game\n");
         return (NULL);
     }
+    game->status = 0;
     game->time_left = app->time_left;
     game->explo_queue = create_list_explosion();
     game->max_bombs = app->nb_bomb_start;
@@ -125,6 +126,17 @@ static int game_update_explosion(game_t *game)
     return (action_changed);
 }
 
+int game_is_over(game_t *game)
+{
+    int nb_player_alive = 0;
+
+    for (int i = 0; i < NB_PLAYERS; i++) {
+        if (game->players[i]->is_alive)
+            nb_player_alive++;
+    }
+    return (nb_player_alive <= 1);
+}
+
 int game_update(app_t *app, game_t *game)
 {
     int action_changed = 0;
@@ -135,5 +147,6 @@ int game_update(app_t *app, game_t *game)
         action_changed = 1;
     if (game_update_explosion(game))
         action_changed = 1;
+
     return (action_changed);
 }

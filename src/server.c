@@ -25,31 +25,31 @@ static int server_event_keyboard(app_t *app, game_t *game, SDL_Event *e
         result = STATE_SERVER;
         break;
     case SDLK_UP:
-        if (server->actual_index > 1) {
+        if (server->game_started) {
             move(app, game, 0, SDLK_UP);
             send_all_clients(server, game);
         }
         break;
     case SDLK_DOWN:
-        if (server->actual_index > 1) {
+        if (server->game_started) {
             move(app, game, 0, SDLK_DOWN);
             send_all_clients(server, game);
         }
         break;
     case SDLK_LEFT:
-        if (server->actual_index > 1) {
+        if (server->game_started) {
             move(app, game, 0, SDLK_LEFT);
             send_all_clients(server, game);
         }
         break;
     case SDLK_RIGHT:
-        if (server->actual_index > 1) {
+        if (server->game_started) {
             move(app, game, 0, SDLK_RIGHT);
             send_all_clients(server, game);
         }
         break;
     case SDLK_SPACE:
-        if (server->actual_index > 1) {
+        if (server->game_started) {
             action(game, 0);
             send_all_clients(server, game);
         }
@@ -77,7 +77,9 @@ static int server_event(app_t *app, game_t *game, server_t *server)
 
 static void server_draw(app_t *app, server_t *server)
 {
-    if (server->actual_index < 2)
+    if (server->game_is_starting)
+        button_draw(app, server->start_text);
+    else if (!server->game_started)
         button_draw(app, server->wait_text);
     SDL_RenderPresent(app->renderer);
 }
@@ -85,19 +87,21 @@ static void server_draw(app_t *app, server_t *server)
 static void server_interpet_message(app_t *app, game_t *game, char buffer[BUF_SIZE]
                                 , int index, server_t *server)
 {
-    if (!strcmp(buffer, "join"))
-        game->players[index - 1]->is_alive = 1;
-    else if (!strcmp(buffer, "up"))
-        move(app, game, index - 1, SDLK_UP);
-    else if (!strcmp(buffer, "down"))
-        move(app, game, index - 1, SDLK_DOWN);
-    else if (!strcmp(buffer, "left"))
-        move(app, game, index - 1, SDLK_LEFT);
-    else if (!strcmp(buffer, "right"))
-        move(app, game, index - 1, SDLK_RIGHT);
-    else if (!strcmp(buffer, "bomb"))
-        action(game, index - 1);
-    else if (!strcmp(buffer, "exit")) {
+    if (server->game_started) {
+        if (!strcmp(buffer, "join"))
+            game->players[index - 1]->is_alive = 1;
+        else if (!strcmp(buffer, "up"))
+            move(app, game, index - 1, SDLK_UP);
+        else if (!strcmp(buffer, "down"))
+            move(app, game, index - 1, SDLK_DOWN);
+        else if (!strcmp(buffer, "left"))
+            move(app, game, index - 1, SDLK_LEFT);
+        else if (!strcmp(buffer, "right"))
+            move(app, game, index - 1, SDLK_RIGHT);
+        else if (!strcmp(buffer, "bomb"))
+            action(game, index - 1);
+    }
+    if (!strcmp(buffer, "exit")) {
         remove_client(server, index - 1);
         game->players[index - 1]->is_alive = 0;
         printf("Player %d left the game\n", index);
@@ -116,9 +120,13 @@ static server_t *server_create(app_t *app)
     }
     server->socketfd = server_connection(app->port, &(server->sin));
     server->actual_index = 0;
+    server->game_started = 0;
+    server->game_is_starting = 0;
     server->max_index = server->socketfd;
     server->wait_text = button_create(app, "En attente de joueurs...", button_pos1);
     server->wait_text->selected = 1;
+    server->start_text = button_create(app, "La partie va demarrer...", button_pos1);
+    server->start_text->selected = 1;
     create_client(server, &(server->sin));
     return (server);
 }
@@ -128,9 +136,37 @@ static void server_destroy(server_t *server)
     if (server != NULL) {
         if (server->wait_text != NULL)
             button_destroy(server->wait_text);
+        if (server->start_text != NULL)
+            button_destroy(server->start_text);
         closesocket(server->socketfd);
         free(server);
     }
+}
+
+static int server_time(server_t *server, game_t *game)
+{
+    int over = 0;
+
+    if (server->game_is_starting) {
+        if (!game_is_over(game)) {
+            if (SDL_GetTicks() >= server->at_game_starting + 15 * 1000) {
+                server->game_started = 1;
+                server->game_is_starting = 0;
+                game->status = 1;
+                send_all_clients(server, game);
+            }
+        } else {
+            server->game_is_starting = 0;
+        }
+    }
+    else if (server->game_started) {
+        if (game_is_over(game)) {
+            over = 1;
+            game->status = 2;
+            send_all_clients(server, game);
+        }
+    }
+    return (over);
 }
 
 int server_run(app_t *app)
@@ -166,16 +202,25 @@ int server_run(app_t *app)
                     send_all_clients(server, game);
                 }
             } else if (server->actual_index != MAX_CLIENTS) {
-                client_t tmp_client = create_client(server, &csin);
-                game->players[tmp_client.index - 1]->is_alive = 1;
-                send_notif_join(server, &tmp_client, app);
-                send_all_clients(server, game);
-                printf("Player %d joined the game\n", tmp_client.index);
+                if (!server->game_started) {
+                    client_t tmp_client = create_client(server, &csin);
+                    game->players[tmp_client.index - 1]->is_alive = 1;
+                    send_notif_join(server, &tmp_client, app);
+                    send_all_clients(server, game);
+                    printf("Player %d joined the game\n", tmp_client.index);
+                    if (!server->game_is_starting) {
+                        server->at_game_starting = SDL_GetTicks();
+                        server->game_is_starting = 1;
+                    }
+                }
             }
         }
         if (game_update(app, game))
             send_all_clients(server, game);
-        state = server_event(app, game, server);
+        if (server_time(server, game))
+            state = STATE_MENU;
+        else
+            state = server_event(app, game, server);
         game_draw(app, game);
         server_draw(app, server);
         SDL_Delay(20);

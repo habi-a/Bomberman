@@ -35,11 +35,15 @@ typedef   struct              client_t {
 }                             client_t;
 
 typedef   struct              server_s {
+    int                       game_started;
+    int                       game_is_starting;
     int                       socketfd;
     int                       actual_index;
     int                       max_index;
+    Uint32                    at_game_starting;
     client_t                  clients[MAX_CLIENTS];
     button_t                  *wait_text;
+    button_t                  *start_text;
     sockaddr_in_t             sin;
 }                             server_t;
 

@@ -169,6 +169,7 @@ static void decode_explosions(app_t *app, game_t *game, char *payload)
 void decode_game(app_t *app, game_t *game, char *payload)
 {
     int j = 0;
+
     for (int i = 0; i < 5; i++) {
         char tmp_payload[64] = { 0 };
 
@@ -182,6 +183,8 @@ void decode_game(app_t *app, game_t *game, char *payload)
             decode_explosions(app, game, tmp_payload);
         j++;
     }
+    game->status = payload[j] - '0';
+    j += 2;
     decode_map(game, payload + j);
 }
 

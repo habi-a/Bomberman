@@ -68,14 +68,17 @@ static int client_event(client_helper_t *client)
     return (result);
 }
 
-static void client_draw(app_t *app, client_helper_t *client)
+static void client_draw(app_t *app, client_helper_t *client, game_t *game)
 {
     if (!client->is_connected) {
         SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
         SDL_RenderClear(app->renderer);
         button_draw(app, client->wait_text);
     }
+    else if (game->status == 0)
+        button_draw(app, client->starting_text);
     SDL_RenderPresent(app->renderer);
+    game = game;
 }
 
 static client_helper_t *client_create(app_t *app)
@@ -88,11 +91,14 @@ static client_helper_t *client_create(app_t *app)
         fprintf(stderr, "Failed to malloc server\n");
         return (NULL);
     }
+    memset(&(client->sin), 0, sizeof(client->sin));
     client->socketfd = client_connection(app->ip, app->port, &(client->sin));
     client->is_connected = 0;
     client->max_index = client->socketfd;
     client->wait_text = button_create(app, "Connexion en cours...", button_pos1);
     client->wait_text->selected = 1;
+    client->starting_text = button_create(app, "La partie va demarrer...", button_pos1);
+    client->starting_text->selected = 1;
     return (client);
 }
 
@@ -115,8 +121,6 @@ int client_run(app_t *app)
     game_t *game = NULL;
     struct timeval waitd = { 0, 0 };
 
-    memset(&(client->sin), 0, sizeof(client->sin));
-    client->socketfd = client_connection(app->ip, app->port, &(client->sin));
     write_server(client->socketfd, &(client->sin), " ");
     while (state == STATE_CLIENT_SOCKET) {
         FD_ZERO(&rdfs);
@@ -138,10 +142,13 @@ int client_run(app_t *app)
             else
                 decode_game(app, game, buffer);
         }
-        state = client_event(client);
+        if (client->is_connected && game->status == 2)
+            state = STATE_MENU;
+        else
+            state = client_event(client);
         if (client->is_connected)
             game_draw(app, game);
-        client_draw(app, client);
+        client_draw(app, client, game);
         SDL_Delay(20);
     }
     game_destroy(game);

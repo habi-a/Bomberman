@@ -71,6 +71,8 @@ void encode_game(game_t *game, char *payload)
     }
     encode_explosions(game, payload);
     strncat(payload, "\n", sizeof(payload) - strlen(payload) - 1);
+    payload[strlen(payload)] = game->status + '0';
+    strncat(payload, "\n", sizeof(payload) - strlen(payload) - 1);
     encode_map(game, payload);
 }
 

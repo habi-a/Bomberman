@@ -34,6 +34,7 @@ typedef   struct              client_helper_s {
     int                       is_connected;
     int                       max_index;
     button_t                  *wait_text;
+    button_t                  *starting_text;
     sockaddr_in_t             sin;
 }                             client_helper_t;
 

@@ -24,6 +24,7 @@ typedef struct game_s {
     explosion_list_t *explo_queue;
 
     // Settings
+    int status;
     int is_bonus;
     int max_bombs;
     Uint32 time_left;
@@ -33,6 +34,7 @@ typedef struct game_s {
 game_t *game_create(app_t *);
 void game_draw(app_t *, game_t *);
 int game_update(app_t *, game_t *);
+int game_is_over(game_t *game);
 void game_destroy(game_t *);
 
 #endif /* _GAME_H_ */
