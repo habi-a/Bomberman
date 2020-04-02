@@ -78,5 +78,5 @@ void encode_game(game_t *game, char *payload)
 
 void encode_first_info(app_t *app, char *payload)
 {
-    sprintf(payload, "%d %d", app->nb_bomb_start, app->index_map);
+    sprintf(payload, "%d %d %d", app->nb_bomb_start, app->time_left, app->index_map);
 }

@@ -8,8 +8,6 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
-#include "app.h"
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -21,10 +19,11 @@ typedef struct button_s {
     SDL_Texture *texture_select;
 } button_t;
 
-SDL_Texture *load_text_texture(app_t *, const char *, SDL_Color *);
-
-button_t *button_create(app_t *, const char *, SDL_Rect);
-void button_draw(app_t *, button_t *);
+void button_draw(button_t *, SDL_Renderer *);
 void button_destroy(button_t *);
+button_t *button_create(const char *, SDL_Rect
+                        , SDL_Renderer *, TTF_Font *);
+SDL_Texture *load_text_texture(const char *, SDL_Color *
+                                , SDL_Renderer *, TTF_Font *);
 
 #endif /* _BUTTON_H_ */

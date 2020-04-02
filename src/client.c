@@ -73,10 +73,10 @@ static void client_draw(app_t *app, client_helper_t *client, game_t *game)
     if (!client->is_connected) {
         SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
         SDL_RenderClear(app->renderer);
-        button_draw(app, client->wait_text);
+        button_draw(client->wait_text, app->renderer);
     }
     else if (game->status == 0)
-        button_draw(app, client->starting_text);
+        button_draw(client->starting_text, app->renderer);
     SDL_RenderPresent(app->renderer);
     game = game;
 }
@@ -95,9 +95,9 @@ static client_helper_t *client_create(app_t *app)
     client->socketfd = client_connection(app->ip, app->port, &(client->sin));
     client->is_connected = 0;
     client->max_index = client->socketfd;
-    client->wait_text = button_create(app, "Connexion en cours...", button_pos1);
+    client->wait_text = button_create("Connexion en cours...", button_pos1, app->renderer, app->font);
     client->wait_text->selected = 1;
-    client->starting_text = button_create(app, "La partie va demarrer...", button_pos1);
+    client->starting_text = button_create("La partie va demarrer...", button_pos1, app->renderer, app->font);
     client->starting_text->selected = 1;
     return (client);
 }

@@ -78,9 +78,9 @@ static int server_event(app_t *app, game_t *game, server_t *server)
 static void server_draw(app_t *app, server_t *server)
 {
     if (server->game_is_starting)
-        button_draw(app, server->start_text);
+        button_draw(server->start_text, app->renderer);
     else if (!server->game_started)
-        button_draw(app, server->wait_text);
+        button_draw(server->wait_text, app->renderer);
     SDL_RenderPresent(app->renderer);
 }
 
@@ -123,9 +123,9 @@ static server_t *server_create(app_t *app)
     server->game_started = 0;
     server->game_is_starting = 0;
     server->max_index = server->socketfd;
-    server->wait_text = button_create(app, "En attente de joueurs...", button_pos1);
+    server->wait_text = button_create("En attente de joueurs...", button_pos1, app->renderer, app->font);
     server->wait_text->selected = 1;
-    server->start_text = button_create(app, "La partie va demarrer...", button_pos1);
+    server->start_text = button_create("La partie va demarrer...", button_pos1, app->renderer, app->font);
     server->start_text->selected = 1;
     create_client(server, &(server->sin));
     return (server);
@@ -153,6 +153,8 @@ static int server_time(server_t *server, game_t *game)
                 server->game_started = 1;
                 server->game_is_starting = 0;
                 game->status = 1;
+                game->time_started = SDL_GetTicks();
+                game->time_enabled = (game->time_left) ? 1 : 0;
                 send_all_clients(server, game);
             }
         } else {

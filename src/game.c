@@ -30,6 +30,7 @@ static int game_create_players(app_t *app, game_t *game)
 
 game_t *game_create(app_t *app)
 {
+    SDL_Rect button_pos1 = { 10 * app->tile_size, 21 * app->tile_size, 5 * app->tile_size, 1 * app->tile_size };
     game_t *game = malloc(sizeof(game_t));
 
     if (game == NULL) {
@@ -37,10 +38,16 @@ game_t *game_create(app_t *app)
         return (NULL);
     }
     game->status = 0;
-    game->time_left = app->time_left;
+    game->time_started = 0;
+    game->time_enabled = 0;
+    game->time_left = app->time_left * 60 * 1000;
+    game->current_time = SDL_GetTicks();
+    game->chrono_time = game->time_left;
     game->explo_queue = create_list_explosion();
     game->max_bombs = app->nb_bomb_start;
     game->map_selected = app->maps_available[app->index_map - 1];
+    game->chrono = button_create("00000", button_pos1, app->renderer, app->font);
+    game->chrono->selected = 1;
     game->map = map_load(app->renderer, app->tile_size, game->map_selected);
     if (!game_create_players(app, game) || game->map == NULL)
         return (NULL);
@@ -57,6 +64,8 @@ void game_destroy(game_t *game)
             map_destroy(game->map);
         if (game->explo_queue != NULL)
             destroy_list_explosion(game->explo_queue);
+        if (game->chrono != NULL)
+            button_destroy(game->chrono);
         free(game);
     }
 }
@@ -70,6 +79,7 @@ void game_draw(app_t *app, game_t *game)
         for (int i = 0; i < NB_PLAYERS; i++)
             player_draw(game->players[i], app->renderer);
         explosions_draw(game->explo_queue, app->renderer);
+        button_draw(game->chrono, app->renderer);
     }
 }
 
@@ -126,10 +136,30 @@ static int game_update_explosion(game_t *game)
     return (action_changed);
 }
 
+static void game_update_chrono(app_t *app, game_t *game)
+{
+    char chrono_text[100] = { 0 };
+    Uint32 new_time = SDL_GetTicks();
+    SDL_Color color = { 255, 0, 0, 255 };
+
+    if (game->status == 1 && game->time_enabled
+        && new_time >= game->current_time + 1000) {
+        game->chrono_time = (long)game->time_left - (new_time - game->time_started);
+        sprintf(chrono_text, "%ld", game->chrono_time / 1000);
+        if (game->chrono->texture_select != NULL)
+            SDL_DestroyTexture(game->chrono->texture_select);
+        game->chrono->texture_select
+            = load_text_texture(chrono_text, &color, app->renderer, app->font);
+        game->current_time = new_time;
+    }
+}
+
 int game_is_over(game_t *game)
 {
     int nb_player_alive = 0;
 
+    if (game->time_enabled && game->chrono_time <= 0)
+        return (1);
     for (int i = 0; i < NB_PLAYERS; i++) {
         if (game->players[i]->is_alive)
             nb_player_alive++;
@@ -147,6 +177,6 @@ int game_update(app_t *app, game_t *game)
         action_changed = 1;
     if (game_update_explosion(game))
         action_changed = 1;
-
+    game_update_chrono(app, game);
     return (action_changed);
 }

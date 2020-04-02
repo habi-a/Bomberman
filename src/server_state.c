@@ -35,27 +35,27 @@ static SDL_Texture *server_state_background(app_t *app)
 
 static void server_state_buttons(app_t *app, server_state_t *server_state)
 {
-    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 8 * app->tile_size, 6 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 9 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos3 = { 1.5 * app->tile_size, 10.5 * app->tile_size, 8.5 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos4 = { 1.5 * app->tile_size, 11.5 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos5 = { 1.5 * app->tile_size, 13 * app->tile_size, 10.5 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos6 = { 1.5 * app->tile_size, 14 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos7 = { 1.5 * app->tile_size, 15.5 * app->tile_size, 2.5 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos8 = { 1.5 * app->tile_size, 16.5 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos9 = { 1.5 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
-    SDL_Rect button_pos10 = { 9.25 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
+    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 9 * app->tile_size, 6 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 10 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos3 = { 1.5 * app->tile_size, 11.5 * app->tile_size, 8.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos4 = { 1.5 * app->tile_size, 12.5 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos5 = { 1.5 * app->tile_size, 14 * app->tile_size, 10.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos6 = { 1.5 * app->tile_size, 15 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos7 = { 1.5 * app->tile_size, 16.5 * app->tile_size, 2.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos8 = { 1.5 * app->tile_size, 17.5 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos9 = { 1.5 * app->tile_size, 20.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
+    SDL_Rect button_pos10 = { 9.25 * app->tile_size, 20.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
 
-    server_state->buttons[0] = button_create(app, "Index de la map:", button_pos1);
-    server_state->buttons[1] = button_create(app, " ", button_pos2);
-    server_state->buttons[2] = button_create(app, "Temps max en minutes:", button_pos3);
-    server_state->buttons[3] = button_create(app, " ", button_pos4);
-    server_state->buttons[4] = button_create(app, "Nombre de bombe au demarrage:", button_pos5);
-    server_state->buttons[5] = button_create(app, " ", button_pos6);
-    server_state->buttons[6] = button_create(app, "Port:", button_pos7);
-    server_state->buttons[7] = button_create(app, " ", button_pos8);
-    server_state->buttons[8] = button_create(app, "Echap: Retour", button_pos9);
-    server_state->buttons[9] = button_create(app, "Entree: Suivant", button_pos10);
+    server_state->buttons[0] = button_create("Index de la map:", button_pos1, app->renderer, app->font);
+    server_state->buttons[1] = button_create(" ", button_pos2, app->renderer, app->font);
+    server_state->buttons[2] = button_create("Temps max en minutes:", button_pos3, app->renderer, app->font);
+    server_state->buttons[3] = button_create(" ", button_pos4, app->renderer, app->font);
+    server_state->buttons[4] = button_create("Nombre de bombe au demarrage:", button_pos5, app->renderer, app->font);
+    server_state->buttons[5] = button_create(" ", button_pos6, app->renderer, app->font);
+    server_state->buttons[6] = button_create("Port:", button_pos7, app->renderer, app->font);
+    server_state->buttons[7] = button_create(" ", button_pos8, app->renderer, app->font);
+    server_state->buttons[8] = button_create("Echap: Retour", button_pos9, app->renderer, app->font);
+    server_state->buttons[9] = button_create("Entree: Suivant", button_pos10, app->renderer, app->font);
 }
 
 static server_state_t *server_state_create(app_t *app)
@@ -83,7 +83,7 @@ static void server_state_draw(app_t *app, server_state_t *server_state)
     SDL_RenderClear(app->renderer);
     SDL_RenderCopy(app->renderer, server_state->texture, NULL, &full_screen);
     for (int i = 0; i < 10; i++)
-        button_draw(app, server_state->buttons[i]);
+        button_draw(server_state->buttons[i], app->renderer);
     SDL_RenderPresent(app->renderer);
 }
 
@@ -171,10 +171,10 @@ static int server_state_event(app_t *app, server_state_t *server_state
             SDL_DestroyTexture(server_state->buttons[server_state->index_select + 1]->texture_normal);
         if (!SDL_strcmp(input_text, ""))
             server_state->buttons[server_state->index_select + 1]->texture_normal
-                        = load_text_texture(app, " ", &color);
+                        = load_text_texture(" ", &color, app->renderer, app->font);
         else
             server_state->buttons[server_state->index_select + 1]->texture_normal
-                        = load_text_texture(app, input_text, &color);
+                        = load_text_texture(input_text, &color, app->renderer, app->font);
     }
     return (exit_code);
 }

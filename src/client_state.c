@@ -36,12 +36,12 @@ static SDL_Texture *client_state_background(app_t *app)
 static client_state_t *client_state_create(app_t *app)
 {
     client_state_t *client_state = malloc(sizeof(client_state_t));
-    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 10 * app->tile_size, 5 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 12 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos3 = { 1.5 * app->tile_size, 14 * app->tile_size, 2.5 * app->tile_size, 1.1 * app->tile_size };
-    SDL_Rect button_pos4 = { 1.5 * app->tile_size, 16 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
-    SDL_Rect button_pos5 = { 1.5 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
-    SDL_Rect button_pos6 = { 9.25 * app->tile_size, 19.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
+    SDL_Rect button_pos1 = { 1.5 * app->tile_size, 11 * app->tile_size, 5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos2 = { 1.5 * app->tile_size, 13 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos3 = { 1.5 * app->tile_size, 15 * app->tile_size, 2.5 * app->tile_size, 1.1 * app->tile_size };
+    SDL_Rect button_pos4 = { 1.5 * app->tile_size, 17 * app->tile_size, 0 * app->tile_size, 0.8 * app->tile_size };
+    SDL_Rect button_pos5 = { 1.5 * app->tile_size, 20.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
+    SDL_Rect button_pos6 = { 9.25 * app->tile_size, 20.5 * app->tile_size, 3 * app->tile_size, 1 * app->tile_size };
 
     if (client_state == NULL) {
         fprintf(stderr, "Failed to malloc client_state\n");
@@ -50,12 +50,12 @@ static client_state_t *client_state_create(app_t *app)
     client_state->texture = client_state_background(app);
     if (client_state->texture == NULL)
         return(NULL);
-    client_state->buttons[0] = button_create(app, "IP Serveur:", button_pos1);
-    client_state->buttons[1] = button_create(app, " ", button_pos2);
-    client_state->buttons[2] = button_create(app, "Port:", button_pos3);
-    client_state->buttons[3] = button_create(app, " ", button_pos4);
-    client_state->buttons[4] = button_create(app, "Echap: Retour", button_pos5);
-    client_state->buttons[5] = button_create(app, "Entree: Suivant", button_pos6);
+    client_state->buttons[0] = button_create("IP Serveur:", button_pos1, app->renderer, app->font);
+    client_state->buttons[1] = button_create(" ", button_pos2, app->renderer, app->font);
+    client_state->buttons[2] = button_create("Port:", button_pos3, app->renderer, app->font);
+    client_state->buttons[3] = button_create(" ", button_pos4, app->renderer, app->font);
+    client_state->buttons[4] = button_create("Echap: Retour", button_pos5, app->renderer, app->font);
+    client_state->buttons[5] = button_create("Entree: Suivant", button_pos6, app->renderer, app->font);
     client_state->index_select = 0;
     client_state->buttons[client_state->index_select]->selected = 1;
     return (client_state);
@@ -69,7 +69,7 @@ static void client_state_draw(app_t *app, client_state_t *client_state)
     SDL_RenderClear(app->renderer);
     SDL_RenderCopy(app->renderer, client_state->texture, NULL, &full_screen);
     for (int i = 0; i < 6; i++)
-        button_draw(app, client_state->buttons[i]);
+        button_draw(client_state->buttons[i], app->renderer);
     SDL_RenderPresent(app->renderer);
 }
 
@@ -153,10 +153,10 @@ static int client_state_event(app_t *app, client_state_t *client_state
             SDL_DestroyTexture(client_state->buttons[client_state->index_select + 1]->texture_normal);
         if (!SDL_strcmp(input_text, ""))
             client_state->buttons[client_state->index_select + 1]->texture_normal
-            = load_text_texture(app, " ", &color);
+            = load_text_texture(" ", &color, app->renderer, app->font);
         else
             client_state->buttons[client_state->index_select + 1]->texture_normal
-            = load_text_texture(app, input_text, &color);
+            = load_text_texture(input_text, &color, app->renderer, app->font);
     }
     return (exit_code);
 }

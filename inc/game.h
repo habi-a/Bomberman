@@ -11,6 +11,7 @@
 #include <SDL2/SDL.h>
 
 #include "app.h"
+#include "button.h"
 #include "explosion_queue.h"
 #include "map.h"
 #include "player.h"
@@ -19,15 +20,20 @@
 
 typedef struct game_s {
     // Objects
+    button_t *chrono;
     map_t *map;
     player_t *players[4];
     explosion_list_t *explo_queue;
 
     // Settings
+    int time_enabled;
     int status;
     int is_bonus;
     int max_bombs;
+    long chrono_time;
+    Uint32 current_time;
     Uint32 time_left;
+    Uint32 time_started;
     const char *map_selected;
 } game_t;
 

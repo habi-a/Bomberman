@@ -14,7 +14,7 @@ int main()
 {
     int state = STATE_MENU;
     const int tile_size = 32;
-    app_t *app = app_start(25 * tile_size, 21 * tile_size, tile_size);
+    app_t *app = app_start(25 * tile_size, 22 * tile_size, tile_size);
     state_run_t state_run[STATE_NB] = {
         &menu_run,
         &server_state_run,

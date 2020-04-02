@@ -10,16 +10,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-SDL_Texture *load_text_texture(app_t *app, const char *text, SDL_Color *color)
+SDL_Texture *load_text_texture(const char *text, SDL_Color *color
+                                , SDL_Renderer *renderer, TTF_Font *font)
 {
     SDL_Texture *texture = NULL;
-    SDL_Surface *surface = TTF_RenderText_Solid(app->font, text, *color);
+    SDL_Surface *surface = TTF_RenderText_Solid(font, text, *color);
 
     if (surface == NULL) {
         fprintf(stderr, "Failed to load image text: %s\n", TTF_GetError());
         return (NULL);
     }
-    texture = SDL_CreateTextureFromSurface(app->renderer, surface);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
     if (texture == NULL) {
         fprintf(stderr, "Failed to load texture: %s\n", SDL_GetError());
@@ -28,7 +29,8 @@ SDL_Texture *load_text_texture(app_t *app, const char *text, SDL_Color *color)
     return (texture);
 }
 
-button_t *button_create(app_t *app, const char *text, SDL_Rect rect)
+button_t *button_create(const char *text, SDL_Rect rect
+                        , SDL_Renderer *renderer, TTF_Font *font)
 {
     button_t *button = malloc(sizeof(button_t));
     SDL_Color color = { 255, 255, 255, 255 };
@@ -40,17 +42,17 @@ button_t *button_create(app_t *app, const char *text, SDL_Rect rect)
     }
     button->selected = 0;
     button->position = rect;
-    button->texture_normal = load_text_texture(app, text, &color);
-    button->texture_select = load_text_texture(app, text, &color_selected);
+    button->texture_normal = load_text_texture(text, &color, renderer, font);
+    button->texture_select = load_text_texture(text, &color_selected, renderer, font);
     return (button);
 }
 
-void button_draw(app_t *app, button_t *button)
+void button_draw(button_t *button, SDL_Renderer *renderer)
 {
     if (button->selected)
-        SDL_RenderCopy(app->renderer, button->texture_select, NULL, &button->position);
+        SDL_RenderCopy(renderer, button->texture_select, NULL, &button->position);
     else
-        SDL_RenderCopy(app->renderer, button->texture_normal, NULL, &button->position);
+        SDL_RenderCopy(renderer, button->texture_normal, NULL, &button->position);
 }
 
 void button_destroy(button_t *button)

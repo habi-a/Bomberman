@@ -192,12 +192,19 @@ void decode_notif(app_t *app, char *payload)
 {
     int j = 0;
     char tmp_bombs[4] = { 0 };
+    char time[4] = { 0 };
 
     for (int k = 0; payload[j] != ' '; k++) {
         tmp_bombs[k] = payload[j];
         j++;
     }
     app->nb_bomb_start = atoi(tmp_bombs);
+    j++;
+    for (int k = 0; payload[j] != ' '; k++) {
+        time[k] = payload[j];
+        j++;
+    }
+    app->time_left = atoi(time);
     j++;
     app->index_map = atoi(payload + j);
     j++;

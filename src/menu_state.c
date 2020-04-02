@@ -46,9 +46,9 @@ static menu_t *menu_create(app_t *app)
     menu->texture = menu_background(app);
     if (menu->texture == NULL)
         return(NULL);
-    menu->buttons[0] = button_create(app, "Heberger une partie", button_pos1);
-    menu->buttons[1] = button_create(app, "Se connecter a une partie", button_pos2);
-    menu->buttons[2] = button_create(app, "Sortir", button_pos3);
+    menu->buttons[0] = button_create("Heberger une partie", button_pos1, app->renderer, app->font);
+    menu->buttons[1] = button_create("Se connecter a une partie", button_pos2, app->renderer, app->font);
+    menu->buttons[2] = button_create("Sortir", button_pos3, app->renderer, app->font);
     menu->index_select = 0;
     menu->buttons[menu->index_select]->selected = 1;
     return (menu);
@@ -62,7 +62,7 @@ static void menu_draw(app_t *app, menu_t *menu)
     SDL_RenderClear(app->renderer);
     SDL_RenderCopy(app->renderer, menu->texture, NULL, &full_screen);
     for (int i = 0; i < 3; i++)
-        button_draw(app, menu->buttons[i]);
+        button_draw(menu->buttons[i], app->renderer);
     SDL_RenderPresent(app->renderer);
 }
 
