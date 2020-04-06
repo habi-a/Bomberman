@@ -52,9 +52,9 @@ static int map_text_load(map_t *map, FILE *fp, int tile_size, int *i)
     while ((read = getline(&line, &len, fp)) != -1 && k < map->nb_block) {
         for (*i = 0; *i < read && line[*i] != '\n'; *i += 1) {
             if (line[*i] == 'W')
-                map->block[k++] = block_load(map->wall_texture, BLOCK_METAL, *i, j, tile_size);
+                map->block[k++] = block_load(map->wall_texture, BLOCK_METAL, *i, j + 1, tile_size);
             else if (line[*i] == 'X')
-                map->block[k++] = block_load(map->block_texture, BLOCK_NORMAL, *i, j, tile_size);
+                map->block[k++] = block_load(map->block_texture, BLOCK_NORMAL, *i, j + 1, tile_size);
         }
         j++;
     }
@@ -80,7 +80,7 @@ void map_draw(map_t *map, SDL_Renderer *renderer, int tilesize)
 {
     for (int j = 0; j < map->j_max; j++)
         for (int i = 0; i < map->i_max; i++) {
-            SDL_Rect tmp_pos = { i * tilesize, j * tilesize, tilesize, tilesize};
+            SDL_Rect tmp_pos = { i * tilesize, (j + 1) * tilesize, tilesize, tilesize};
             SDL_RenderCopy(renderer, map->floor_texture, NULL, &(tmp_pos));
         }
     for (int i = 0; i < map->nb_block; i++)

@@ -14,13 +14,13 @@
 
 static int game_create_players(app_t *app, game_t *game)
 {
-    game->players[0] = player_load(app->renderer, 1, 1, app->tile_size
+    game->players[0] = player_load(app->renderer, 1, 2, app->tile_size
                 , game->max_bombs, "./rsc/sprites/player/player1/front.png");
-    game->players[1] = player_load(app->renderer, 23, 1, app->tile_size
+    game->players[1] = player_load(app->renderer, 23, 2, app->tile_size
                 , game->max_bombs, "./rsc/sprites/player/player2/front.png");
-    game->players[2] = player_load(app->renderer, 23, 19, app->tile_size
+    game->players[2] = player_load(app->renderer, 23, 20, app->tile_size
                 , game->max_bombs, "./rsc/sprites/player/player3/front.png");
-    game->players[3] = player_load(app->renderer, 1, 19, app->tile_size
+    game->players[3] = player_load(app->renderer, 1, 20, app->tile_size
                 , game->max_bombs, "./rsc/sprites/player/player4/front.png");
     if (game->players[0] == NULL || game->players[1] == NULL
         || game->players[2] == NULL || game->players[3] == NULL)
@@ -30,7 +30,7 @@ static int game_create_players(app_t *app, game_t *game)
 
 game_t *game_create(app_t *app)
 {
-    SDL_Rect button_pos1 = { 10 * app->tile_size, 21 * app->tile_size, 5 * app->tile_size, 1 * app->tile_size };
+    SDL_Rect button_pos1 = { 10 * app->tile_size, 0 * app->tile_size, 5 * app->tile_size, 1 * app->tile_size };
     game_t *game = malloc(sizeof(game_t));
 
     if (game == NULL) {
@@ -136,7 +136,7 @@ static int game_update_explosion(game_t *game)
     return (action_changed);
 }
 
-static void game_update_chrono(app_t *app, game_t *game)
+void game_update_chrono(app_t *app, game_t *game)
 {
     char chrono_text[100] = { 0 };
     Uint32 new_time = SDL_GetTicks();
@@ -145,7 +145,7 @@ static void game_update_chrono(app_t *app, game_t *game)
     if (game->status == 1 && game->time_enabled
         && new_time >= game->current_time + 1000) {
         game->chrono_time = (long)game->time_left - (new_time - game->time_started);
-        sprintf(chrono_text, "%ld", game->chrono_time / 1000);
+        sprintf(chrono_text, "%05ld", game->chrono_time / 1000);
         if (game->chrono->texture_select != NULL)
             SDL_DestroyTexture(game->chrono->texture_select);
         game->chrono->texture_select

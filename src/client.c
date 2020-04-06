@@ -94,6 +94,7 @@ static client_helper_t *client_create(app_t *app)
     memset(&(client->sin), 0, sizeof(client->sin));
     client->socketfd = client_connection(app->ip, app->port, &(client->sin));
     client->is_connected = 0;
+    client->game_started = 0;
     client->max_index = client->socketfd;
     client->wait_text = button_create("Connexion en cours...", button_pos1, app->renderer, app->font);
     client->wait_text->selected = 1;
@@ -139,15 +140,23 @@ int client_run(app_t *app)
                 game = game_create(app);
                 client->is_connected = 1;
             }
-            else
+            else {
                 decode_game(app, game, buffer);
+                if (game->status == 1 && !client->game_started) {
+                    client->game_started = 1;
+                    game->time_started = SDL_GetTicks();
+                    game->time_enabled = (game->time_left) ? 1 : 0;
+                }
+            }
         }
         if (client->is_connected && game->status == 2)
             state = STATE_MENU;
         else
             state = client_event(client);
-        if (client->is_connected)
+        if (client->is_connected) {
+            game_update_chrono(app, game);
             game_draw(app, game);
+        }
         client_draw(app, client, game);
         SDL_Delay(20);
     }

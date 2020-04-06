@@ -209,7 +209,7 @@ int server_state_run(app_t *app)
         if (!server_state->index_select)
             exit_code = server_state_event(app, server_state, id_map, &len, 1);
         else if (server_state->index_select == 2)
-            exit_code = server_state_event(app, server_state, time_left, &len, 4);
+            exit_code = server_state_event(app, server_state, time_left, &len, 3);
         else if (server_state->index_select == 4)
             exit_code = server_state_event(app, server_state, nb_bombs, &len, 1);
         else if (server_state->index_select == 6)

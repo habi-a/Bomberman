@@ -12,7 +12,7 @@ int check_move_up(app_t *app, game_t *game, int index_player)
 {
     SDL_Point to_go = { game->players[index_player]->coord.x, game->players[index_player]->coord.y - 1 };
 
-    if (game->players[index_player]->coord.y * app->tile_size - 1 * app->tile_size < 0)
+    if (game->players[index_player]->coord.y * app->tile_size - 2 * app->tile_size < 0)
         return (0);
     if (get_bomb_active_here(game, &to_go) != NULL)
         return (0);

@@ -32,6 +32,7 @@ typedef   struct hostent      hostent_t;
 typedef   struct              client_helper_s {
     int                       socketfd;
     int                       is_connected;
+    int                       game_started;
     int                       max_index;
     button_t                  *wait_text;
     button_t                  *starting_text;
