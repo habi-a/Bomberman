@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <netdb.h>
 
-#define  BUF_SIZE            2048
+#define  BUF_SIZE            4096
 #define  INVALID_SOCKET      -1
 #define  SOCKET_ERROR        -1
 #define  closesocket(s)      close(s)

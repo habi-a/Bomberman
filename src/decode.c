@@ -169,21 +169,24 @@ static void decode_explosions(app_t *app, game_t *game, char *payload)
 void decode_game(app_t *app, game_t *game, char *payload)
 {
     int j = 0;
+    char payload_explosions[1024] = { 0 };
 
-    for (int i = 0; i < 5; i++) {
-        char tmp_payload[64] = { 0 };
+    for (int i = 0; i < 4; i++) {
+        char tmp_payload[512] = { 0 };
 
         for (int k = 0; payload[j] != '\n'; k++) {
             tmp_payload[k] = payload[j];
             j++;
         }
-        if (i < 4)
-            decode_player(app, game, i, tmp_payload);
-        else
-            decode_explosions(app, game, tmp_payload);
+        decode_player(app, game, i, tmp_payload);
         j++;
     }
-    game->status = payload[j] - '0';
+    for (int k = 0; payload[j] != '\n'; k++) {
+        payload_explosions[k] = payload[j];
+        j++;
+    }
+    decode_explosions(app, game, payload_explosions);
+    game->status = payload[++j] - '0';
     j += 2;
     decode_map(game, payload + j);
 }
