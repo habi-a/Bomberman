@@ -16,7 +16,7 @@ Si utilisation de docker:
 - **$> docker run --rm -it -v ${PWD}:/app sdl_project**
 
 Ensuite:
-- **$> cd {sub_project} (par exemple "sdl/")**
+- **$> cd {projet}**
 - **$> make**
 - **$> ./bomberman**
 
@@ -25,6 +25,9 @@ Ensuite:
 #### _Héberger une partie :_
 
 - **Héberger une partie**
+- **Choix d'une map (1/2)**
+- **Temps maximum (en minute)**
+- **Nombre de bombe maximum**
 - **Ajout d'un port (par exemple 94200)**
 - **Attendre la connexion des joueurs !**
 
