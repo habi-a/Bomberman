@@ -78,7 +78,6 @@ static void client_draw(app_t *app, client_helper_t *client, game_t *game)
     else if (game->status == 0)
         button_draw(client->starting_text, app->renderer);
     SDL_RenderPresent(app->renderer);
-    game = game;
 }
 
 static client_helper_t *client_create(app_t *app)
