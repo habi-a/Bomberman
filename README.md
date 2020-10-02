@@ -30,4 +30,6 @@ Next:
 
 ### _Screenshot :_
 
-![Alt Text](screenshots/main.JPG)
+![Alt Text](screenshots/mainJPG.JPG)
+![Alt Text](screenshots/captureJPG.JPG)
+![Alt Text](screenshots/.JPG)
