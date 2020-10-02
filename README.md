@@ -2,7 +2,7 @@
 
 ## Requirements
 
-### _Environments:_
+### _Environment:_
 
 - **Docker**  
 
