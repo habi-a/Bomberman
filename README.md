@@ -4,8 +4,10 @@
 
 ### _Environments:_
 
-- **Docker**
-or
+- **Docker**  
+
+  or
+
 - **Linux/MacOS**
 - **gcc**
 - **make**
