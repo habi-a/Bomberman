@@ -30,8 +30,10 @@ Next:
 
 ### _Screenshot :_
 
-- ![Alt Text](screenshots/mainJPG.JPG)  
-
-- ![Alt Text](screenshots/connectionJPG.JPG)  
-
-- ![Alt Text](screenshots/Capture.JPG)  
+![Alt Text](screenshots/mainJPG.JPG)  
+  
+  
+![Alt Text](screenshots/connectionJPG.JPG)  
+  
+    
+![Alt Text](screenshots/Capture.JPG)  
