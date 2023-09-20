@@ -16,17 +16,16 @@
 
 ### _Build and run:_
 
-- **$> git clone {projet}**
-- **$> cd {projet}**
+- > git clone {projet}
+- > cd {projet}
 
-Or if using docker:
-- **$> docker build -t bomberman .**
-- **$> docker run --rm -it -v ${PWD}:/app sdl_project**
+If using docker:
+- > docker build -t bomberman .
+- > docker run --rm -it -v ${PWD}:/app sdl_project
 
-Next:
-- **$> cd {projet}**
-- **$> make**
-- **$> ./bomberman**
+Then:
+- > make
+- > ./bomberman
 
 ### _Screenshot :_
 
